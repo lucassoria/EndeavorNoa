@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mockup Endeavor Web App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+    <link rel="stylesheet" href="jquery/jquery.mobile-1.2.0.min.css"/>
+    <script src="jquery/jquery-1.8.2.min.js"></script>
+    <script src="jquery/jquery.mobile-1.2.0.min.js"></script>
+    
+    <!-- goole map stuff -->
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+    <script type="text/javascript" src="jquery-ui-map/jquery.ui.map.js"></script>
+        
+    <script type="text/javascript">
+        $(function() {
+        	
+        	$.getJSON("http://localhost/endeavornoa/sponsors.json",
+        		function (data){
+        			var items = [];
+					$.each(data, function(key, val) {
+						items.push('<li data-role="list-divider"> ' + key + ' </li>');
+						if(key == "Gold"){
+							$.each(val, function(key, val) {
+								items.push('<li data-icon="false"><a href="">' + ((val.imagen != "")? '<img src="' + val.imagen + '">' : "") + '<h3> ' + val.nombre + ' </h3></a></li>');
+							});
+						}
+						else{
+							$.each(val, function(key, val) {
+								items.push('<li data-icon="false"><a href="">' + ((val.imagen != "")? '<img src="' + val.imagen + '">' : "") + val.nombre + '</a></li>');
+							});
+						}
+					});
+					$("#sponsors_list").html(items);
+        		}
+        	);
+        	
+            // Also works with: var yourStartLatLng = '59.3426606750, 18.0736160278';
+            var yourStartLatLng = new google.maps.LatLng(59.3426606750, 18.0736160278);
+            $('#map_canvas').gmap({'center': yourStartLatLng});
+                
+                $('#map_canvas').gmap().bind('init', function(ev, map) {
+                    $('#map_canvas').gmap('addMarker', {'position': '57.7973333,12.0502107', 'bounds': true}).click(function() {
+                        $('#map_canvas').gmap('openInfoWindow', {'content': 'Hello World!'}, this);
+                });
+            });
+        });
+        
+        $('#Donde').live("pageshow", function() {
+                    console.log("pageshow");
+                    $('#map_canvas').gmap('refresh');
+        });
+        
+    </script>
+
+    <style type="text/css">
+        .details-page {
+            width: 100%;
+            height: 80%;
+        }
+        #map_content {
+            padding: 0px;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #map_canvas {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            text-shadow: none;
+        }
+    </style>
+    
+</head>
+<body>
+    <div data-role="page" id="XE2012">
+        <div data-role="header" data-id="headerBar" data-position="fixed" data-theme="a">
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#XE2012" class="ui-btn-active ui-state-persist">XE2012</a></li>
+                    <li><a href="agenda.html">Agenda</a></li>
+                    <li><a href="tweets.html">Tweets</a></li>
+                    <li><a href="speakers.html">Speakers</a></li>
+                </ul>
+            </div>
+            
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#XE2012" class="ui-btn-active ui-state-persist"  data-theme="c">Que</a></li>
+                    <li><a href="#Donde" data-theme="c">Donde</a></li>
+                    <li><a href="#Sponsors" data-theme="c">Sponsors</a></li>
+                </ul>
+            </div>
+            
+        </div>
+        <div data-role="content">
+            <p>Que content</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum posuere sollicitudin nunc. Ut rutrum tempor bibendum. In in nibh tellus, at imperdiet elit. Phasellus pretium, quam sit amet pretium rhoncus, justo eros luctus erat, nec sagittis tortor velit at metus. Cras vitae orci augue, at adipiscing diam. Phasellus accumsan placerat nulla, in facilisis odio commodo sed. Pellentesque porta turpis sit amet mauris laoreet ut placerat urna adipiscing. Morbi diam turpis, accumsan eget dignissim et, blandit non ligula. Curabitur laoreet suscipit arcu non porttitor. Aliquam quis lacinia tortor.
+
+Curabitur pulvinar nibh id elit dictum feugiat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Suspendisse faucibus auctor massa et suscipit. Aliquam id pulvinar ligula. Vestibulum rutrum, dui quis rhoncus euismod, ligula eros pretium est, non placerat felis diam id mi. Fusce ac eros risus. Sed vestibulum leo risus.
+
+Morbi sit amet orci mi, eget cursus quam. In hac habitasse platea dictumst. Ut imperdiet consectetur est, vel porttitor nisl congue quis. Vivamus ut enim arcu, eget lacinia purus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Suspendisse commodo quam et orci rutrum congue. Curabitur condimentum feugiat enim, quis auctor velit adipiscing eget. Sed mattis ornare consequat.
+
+Proin blandit dui ac lacus iaculis eget semper quam sagittis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Etiam ut justo a purus semper tempor. Etiam a molestie orci. Ut posuere tristique leo, non varius eros mattis at. Maecenas justo sapien, rutrum nec ultrices at, luctus a quam. Aenean vehicula semper gravida. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aenean eget sem magna, id mollis nulla. Sed sodales elementum arcu, id hendrerit magna ullamcorper ac. In bibendum commodo auctor. Sed libero quam, commodo vitae sodales id, tempor sit amet nulla. Vivamus nisi mi, lacinia a consequat ac, aliquam eu elit. Proin pharetra justo id libero pellentesque aliquet vitae et eros. Quisque sed nisl in enim rhoncus cursus.
+
+Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce in orci a justo facilisis consectetur in id odio. Nulla a ultricies massa. Proin id est a lacus rhoncus cursus et et mi. Sed cursus, eros vitae venenatis adipiscing, nibh dui adipiscing magna, non vulputate dui lacus ac arcu. Mauris ac ipsum ac magna sollicitudin rutrum eget vitae dui.</p>
+        </div>
+    </div>
+    
+    <!-- DONDE -->
+    <div data-role="page" id="Donde" class="details-page">
+        <div data-role="header" data-id="headerBar" data-position="fixed" data-theme="a">
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#XE2012" class="ui-btn-active ui-state-persist">XE2012</a></li>
+                    <li><a href="agenda.html">Agenda</a></li>
+                    <li><a href="tweets.html">Tweets</a></li>
+                    <li><a href="speakers.html">Speakers</a></li>
+                </ul>
+            </div>
+            
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#XE2012" data-theme="c">Que</a></li>
+                    <li><a href="#Donde" class="ui-btn-active ui-state-persist" data-theme="c">Donde</a></li>
+                    <li><a href="#Sponsors" data-theme="c">Sponsors</a></li>
+                </ul>
+            </div>
+        </div>
+        <div data-role="content" id="map_content">
+            <p>Donde content</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum posuere sollicitudin nunc. Ut rutrum tempor bibendum. In in nibh tellus, at imperdiet elit. Phasellus pretium, quam sit amet pretium rhoncus, justo eros luctus erat, nec sagittis tortor velit at metus.</p>
+            <!-- Here it should be a google map -->
+            <!--<div id="map_canvas" style="width:250px;height:250px"></div>-->
+            <div id="map_content">
+                <div id="map_canvas"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sponsors -->
+    <div data-role="page" id="Sponsors">
+        <div data-role="header" data-id="headerBar" data-position="fixed" data-theme="a">
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#XE2012" class="ui-btn-active ui-state-persist">XE2012</a></li>
+                    <li><a href="agenda.html">Agenda</a></li>
+                    <li><a href="tweets.html">Tweets</a></li>
+                    <li><a href="speakers.html">Speakers</a></li>
+                </ul>
+            </div>
+            
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#XE2012" data-theme="c">Que</a></li>
+                    <li><a href="#Donde" data-theme="c">Donde</a></li>
+                    <li><a href="#Sponsors" class="ui-btn-active ui-state-persist" data-theme="c">Sponsors</a></li>
+                </ul>
+            </div>
+        </div>
+        <div data-role="content">
+            <ul data-role="listview" id="sponsors_list">
+                <li data-role="list-divider">Gold</li>
+                <li data-icon="false"><a href=""><img src="apple.png"><h3> Apple </h3></a></li>
+                <li data-icon="false"><a href=""><img src="apple.png"><h3> Apple </h3></a></li>
+                <li data-icon="false"><a href=""><img src="apple.png"><h3> Apple </h3></a></li>
+                <li data-role="list-divider">Silver</li>
+                <li data-icon="false"><a href="">Sponsor2</a></li>
+                <li data-icon="false"><a href="">Sponsor2</a></li>
+                <li data-icon="false"><a href="">Sponsor2</a></li>
+                <li data-icon="false"><a href="">Sponsor2</a></li>
+                <li data-icon="false"><a href="">Sponsor2</a></li>
+                <li data-role="list-divider">Bronce</li>
+                <li data-icon="false"><a href="">Sponsor3</a></li>
+                <li data-icon="false"><a href="">Sponsor3</a></li>
+                <li data-icon="false"><a href="">Sponsor3</a></li>
+                <li data-icon="false"><a href="">Sponsor3</a></li>
+                <li data-icon="false"><a href="">Sponsor3</a></li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
