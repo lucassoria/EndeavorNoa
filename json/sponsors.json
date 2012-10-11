@@ -1,0 +1,44 @@
+{
+	"Gold": [
+		{
+			"imagen": "apple.png",
+			"nombre": "Apple"
+		},
+		{
+			"imagen": "apple.png",
+			"nombre": "Apple"
+		},
+		{
+			"imagen": "apple.png",
+			"nombre": "Apple"
+		}
+	],
+	"Silver": [
+  		{
+			"imagen": "",
+  			"nombre": "Lucas 1"
+  		},
+  		{
+			"imagen": "",
+  			"nombre": "sponsor 2"
+  		},
+  		{
+			"imagen": "",
+  			"nombre": "sponsor 3"
+  		}
+  	],
+	"Bronce": [
+  		{
+			"imagen": "",
+  			"nombre": "sponsor 1"
+  		},
+  		{
+			"imagen": "",
+  			"nombre": "sponsor 2"
+  		},
+  		{
+			"imagen": "",
+  			"nombre": "sponsor 3"
+  		}
+  	]
+}

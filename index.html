@@ -16,23 +16,23 @@
         	
         	$.getJSON("http://localhost/endeavornoa/sponsors.json",
         		function (data){
-        			var items = [];
-					$.each(data, function(key, val) {
-						items.push('<li data-role="list-divider"> ' + key + ' </li>');
-						if(key == "Gold"){
-							$.each(val, function(key, val) {
-								items.push('<li data-icon="false"><a href="">' + ((val.imagen != "")? '<img src="' + val.imagen + '">' : "") + '<h3> ' + val.nombre + ' </h3></a></li>');
-							});
-						}
-						else{
-							$.each(val, function(key, val) {
-								items.push('<li data-icon="false"><a href="">' + ((val.imagen != "")? '<img src="' + val.imagen + '">' : "") + val.nombre + '</a></li>');
-							});
-						}
-					});
-					$("#sponsors_list").html(items);
+        			window.localStorage.setItem('sponsors', JSON.stringify(data));
+        			llenarSponsors(data);
         		}
-        	);
+        	).error(function() { onSponsorsError(); });
+        	
+        	function onSponsorsError(){
+        		var data = window.localStorage.getItem('sponsors');
+        		if(data != null)
+        			llenarSponsors($.parseJSON(data));
+        		else{
+        			$.getJSON("json/sponsors.json", 
+        				function(data){
+							llenarSponsors(data)
+						}
+					);
+				}
+        	}
         	
             // Also works with: var yourStartLatLng = '59.3426606750, 18.0736160278';
             var yourStartLatLng = new google.maps.LatLng(59.3426606750, 18.0736160278);
@@ -49,6 +49,39 @@
                     console.log("pageshow");
                     $('#map_canvas').gmap('refresh');
         });
+        
+        function llenarSponsors(data){
+        	var $page = $("#Sponsors");
+        	
+        	$page.find(".content").empty();
+        	
+        	$page.find(".content").html("<ul></ul>");
+        	
+        	$lista = $page.find(".content ul");
+        	
+        	var items = [];
+			$.each(data, function(key, val) {
+				var strHtml = '<li data-role="list-divider"> ' + key + ' </li>';
+				var item = $(strHtml);
+				$lista.append(item);
+				
+				if(key == "Gold"){
+					$.each(val, function(key, val) {
+						strHtml = '<li data-icon="false"><a href="">' + ((val.imagen != "")? '<img src="' + val.imagen + '">' : "") + '<h3> ' + val.nombre + ' </h3></a></li>';
+						var item = $(strHtml);
+						$lista.append(item);
+					});
+				}
+				else{
+					$.each(val, function(key, val) {
+						strHtml = '<li data-icon="false"><a href="">' + ((val.imagen != "")? '<img src="' + val.imagen + '">' : "") + val.nombre + '</a></li>';
+						var item = $(strHtml);
+						$lista.append(item);
+					});
+				}
+			});
+			$lista.listview();
+        }
         
     </script>
 
@@ -159,7 +192,7 @@ Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce 
                 </ul>
             </div>
         </div>
-        <div data-role="content">
+        <div data-role="content" class="content">
             <ul data-role="listview" id="sponsors_list">
                 <li data-role="list-divider">Gold</li>
                 <li data-icon="false"><a href=""><img src="apple.png"><h3> Apple </h3></a></li>
