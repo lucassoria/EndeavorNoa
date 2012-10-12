@@ -10,17 +10,23 @@
     <!-- goole map stuff -->
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
     <script type="text/javascript" src="jquery-ui-map/jquery.ui.map.js"></script>
+    
+    <!-- jTweetsAnywhere plugin -->
+    <script type="text/javascript" src="jtweetsanywhere/jquery.jtweetsanywhere-1.3.1.min.js"></script>
+    <script type="text/javascript" src="jtweetsanywhere/jtweetsanywhere-de-1.3.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="jtweetsanywhere/jquery.jtweetsanywhere-1.3.1.css" />
         
     <script type="text/javascript">
         $(function() {
-        	
-        	$.getJSON("http://localhost/endeavornoa/sponsors.json",
-        		function (data){
-        			window.localStorage.setItem('sponsors', JSON.stringify(data));
-        			llenarSponsors(data);
-        		}
-        	).error(function() { onSponsorsError(); });
-        	
+        	$('#Sponsors').live("pageshow", function() {
+				$.getJSON("http://localhost/endeavornoa/sponsors.json",
+					function (data){
+						window.localStorage.setItem('sponsors', JSON.stringify(data));
+						llenarSponsors(data);
+					}
+				).error(function() { onSponsorsError(); });
+			});
+			
         	function onSponsorsError(){
         		var data = window.localStorage.getItem('sponsors');
         		if(data != null)
@@ -83,6 +89,24 @@
 			$lista.listview();
         }
         
+        $(document).ready(function(){
+            $('#tweetFeed').jTweetsAnywhere({
+                searchParams: 'q=Endeavor_Noa',
+                count: 20,
+                showTweetFeed: {
+                    showProfileImages: true,
+                    showUserScreenNames: true,
+                    showUserFullNames: true,
+                    showActionReply: true,
+                    showActionRetweet: true,
+                    showActionFavorite: true,
+                    paging: {
+                        mode: "more"
+                    }
+                },
+                showTweetBox: false,
+            });
+        });
     </script>
 
     <style type="text/css">
@@ -113,7 +137,7 @@
                 <ul>
                     <li><a href="#XE2012" class="ui-btn-active ui-state-persist">XE2012</a></li>
                     <li><a href="agenda.html">Agenda</a></li>
-                    <li><a href="tweets.html">Tweets</a></li>
+                    <li><a href="#Tweets">Tweets</a></li>
                     <li><a href="speakers.html">Speakers</a></li>
                 </ul>
             </div>
@@ -148,7 +172,7 @@ Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce 
                 <ul>
                     <li><a href="#XE2012" class="ui-btn-active ui-state-persist">XE2012</a></li>
                     <li><a href="agenda.html">Agenda</a></li>
-                    <li><a href="tweets.html">Tweets</a></li>
+                    <li><a href="#Tweets">Tweets</a></li>
                     <li><a href="speakers.html">Speakers</a></li>
                 </ul>
             </div>
@@ -179,7 +203,7 @@ Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce 
                 <ul>
                     <li><a href="#XE2012" class="ui-btn-active ui-state-persist">XE2012</a></li>
                     <li><a href="agenda.html">Agenda</a></li>
-                    <li><a href="tweets.html">Tweets</a></li>
+                    <li><a href="#Tweets">Tweets</a></li>
                     <li><a href="speakers.html">Speakers</a></li>
                 </ul>
             </div>
@@ -213,5 +237,24 @@ Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce 
             </ul>
         </div>
     </div>
+    
+    <!-- Tweets -->
+    <div data-role="page" id="Tweets">
+        <div data-role="header" data-id="headerBar" data-position="fixed" data-theme="a">
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#XE2012">XE2012</a></li>
+                    <li><a href="agenda.html">Agenda</a></li>
+                    <li><a href="#Tweets" class="ui-btn-active ui-state-persist">Tweets</a></li>
+                    <li><a href="speakers.html">Speakers</a></li>
+                </ul>
+            </div>
+        </div>
+		<div data-role="content">
+			<p>Tweets</p>
+			<div id="tweetFeed">
+			</div>
+		</div>
+	</div>
 </body>
 </html>
