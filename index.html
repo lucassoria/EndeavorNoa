@@ -106,6 +106,35 @@
                 },
                 showTweetBox: false,
             });
+			 var clicked1 = "false";
+            
+               	$("#filterBar").delegate("a", "click", function () {
+	                 /*if (clicked1 == "false")
+	                 {
+	                     clicked1 = "true";*/
+	                 if ($(this).text().toString() != "Todos")
+	                 {
+	                     $("div.ui-input-search").find("input").val($(this).text());
+	                     $("div.ui-input-search").find("input").keyup();
+	                 }
+	                 else
+	                 {
+	                     $("div.ui-input-search").find("input").val("");
+	                     $("div.ui-input-search").find("input").keyup();
+	                 }
+	                 /*}
+	                 /*else
+	                 {
+	                     clicked1 = "false";
+                    
+	                     //$(this).removeClass('ui-btn-inline ui-btn-active ui-btn-hover-c ui-btn-up-c');
+	                     //$(this).removeClass().addClass('ui-btn');
+	                     $("div.ui-input-search").find("input").val("");
+	                     $("div.ui-input-search").find("input").keyup();
+                    
+	                     //"ui-btn ui-btn-inline ui-btn-active ui-btn-hover-c ui-btn-up-c"
+	                 }*/
+	             });
         });
     </script>
 
@@ -136,7 +165,7 @@
             <div data-role="navbar">
                 <ul>
                     <li><a href="#XE2012" class="ui-btn-active ui-state-persist">XE2012</a></li>
-                    <li><a href="agenda.html">Agenda</a></li>
+                    <li><a href="#Agenda">Agenda</a></li>
                     <li><a href="#Tweets">Tweets</a></li>
                     <li><a href="speakers.html">Speakers</a></li>
                 </ul>
@@ -256,5 +285,76 @@ Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce 
 			</div>
 		</div>
 	</div>
+	<!-- Agenda-->
+	<div data-role="page" id="Agenda">
+        <div data-role="header" data-id="headerBar" data-position="fixed" data-theme="a">
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="index.html">XE2012</a></li>
+                    <li><a href="agenda.html" class="ui-btn-active ui-state-persist">Agenda</a></li>
+                    <li><a href="tweets.html">Tweets</a></li>
+                    <li><a href="speakers.html">Speakers</a></li>
+                </ul>
+            </div>
+            
+            <div data-role="navbar" id="filterBar">
+                <ul>
+                    <li><a href="" data-theme="c" class="ui-btn-active ui-state-persist">Todos</a></li>
+                    <li><a href="" data-theme="c">Academia</a></li>
+                    <li><a href="" data-theme="c">Talks</a></li>
+                    <li><a href="" data-theme="c">Networking</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div data-role="content">
+            
+            <ul data-role="listview" data-filter="true" id="testlist">
+                <li data-role="list-divider">10:30</li>
+                <li data-filtertext="Academia"><a href="detalle_charla.html">
+                    <p><strong>Academia</strong></p>
+                    <h1><strong>Redfin listing updates for today</strong></h1>
+                    <p>There are 3 updates for the home on your watchlist: 1 updated MLS listing and 2 homes under contract.</p>
+                </a></li>
+                <li data-filtertext="Academia"><a href="">
+                    <p><strong>Academia</strong></p>
+                    <h1><strong>Redfin listing updates for today</strong></h1>
+                    <p>There are 3 updates for the home on your watchlist: 1 updated MLS listing and 2 homes under contract.</p>
+                </a></li>
+                <li data-filtertext="Academia"><a href="">
+                    <p><strong>Academia</strong></p>
+                    <h1><strong>Redfin listing updates for today</strong></h1>
+                    <p>There are 3 updates for the home on your watchlist: 1 updated MLS listing and 2 homes under contract.</p>
+                </a></li>
+                <li data-role="list-divider">14:00</li>
+                <li data-filtertext="Talks"><a href="">
+                    <p><strong>Talks</strong></p>
+                    <h1><strong>Redfin listing updates for today</strong></h1>
+                    <p>There are 3 updates for the home on your watchlist: 1 updated MLS listing and 2 homes under contract.</p>
+                </a></li>
+                <li data-filtertext="Talks"><a href="">
+                    <p><strong>Talks</strong></p>
+                    <h1><strong>Redfin listing updates for today</strong></h1>
+                    <p>There are 3 updates for the home on your watchlist: 1 updated MLS listing and 2 homes under contract.</p>
+                </a></li>
+                <li data-role="list-divider">16:00</li>
+                <li data-filtertext="Networking"><a href="">
+                    <p><strong>Networking</strong></p>
+                    <h1><strong>Redfin listing updates for today</strong></h1>
+                    <p>There are 3 updates for the home on your watchlist: 1 updated MLS listing and 2 homes under contract.</p>
+                </a></li>
+                <li data-filtertext="Networking"><a href="">
+                    <p><strong>Networking</strong></p>
+                    <h1><strong>Redfin listing updates for today</strong></h1>
+                    <p>There are 3 updates for the home on your watchlist: 1 updated MLS listing and 2 homes under contract.</p>
+                </a></li>
+                <li data-filtertext="Networking"><a href="">
+                    <p><strong>Networking</strong></p>
+                    <h1><strong>Redfin listing updates for today</strong></h1>
+                    <p>There are 3 updates for the home on your watchlist: 1 updated MLS listing and 2 homes under contract.</p>
+                </a></li>
+            </ul>
+        </div>
+    </div>
 </body>
 </html>
