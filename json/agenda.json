@@ -1,0 +1,78 @@
+{
+	"14:30": [
+		{
+			"grupo": "Academia",
+			"titulo": "Redfin listing updates for today",
+			"descripcion": "There are 3 updates for the home on your watchlist: 1 updated MLS listing and 2 homes under contract.",
+			"contenido":"Espacio para explayarse completamente sobre de que se trata esta charla en especial",
+			"speakers":[
+				{
+					"nombre":"Andres Jara Werchau",
+					"imagen":"andres",
+					"puesto":"CEO Yalvatar"
+					
+				},
+				{
+					"nombre":"Federico Lopez Calsina",
+					"imagen":"fede",
+					"puesto":"CEO IS"
+					
+				}
+			]
+		},
+		{
+			"grupo": "Academia",
+			"titulo": "Redfin listing updates for today",
+			"descripcion": "There are 4 updates for the home on your watchlist: 1 updated MLS listing and 2 homes under contract.",
+			"contenido":"Espacio para explayarse completamente sobre de que se trata esta charla en especial",
+			"speakers":[
+				{
+					"nombre":"Andres Jara Werchau",
+					"imagen":"andres",
+					"puesto":"CEO Yalvatar"
+					
+				},
+				{
+					"nombre":"Federico Lopez Calsina",
+					"imagen":"fede",
+					"puesto":"CEO IS"
+					
+				}
+			]
+		}
+	],
+	"16": [
+  		{
+			"grupo": "Talks",
+			"titulo": "Redfin listing updates for today",
+			"descripcion": "There are 5 updates for the home on your watchlist: 1 updated MLS listing and 2 homes under contract.",
+			"contenido":"Espacio para explayarse completamente sobre de que se trata esta charla en especial"
+  		},
+  		{
+			"grupo": "Talks",
+			"titulo": "Redfin listing updates for today",
+			"descripcion": "There are 6 updates for the home on your watchlist: 1 updated MLS listing and 2 homes under contract.",
+			"contenido":"Espacio para explayarse completamente sobre de que se trata esta charla en especial",
+			"speakers":[
+				{
+					"nombre":"Andres Jara Werchau",
+					"imagen":"andres",
+					"puesto":"CEO Yalvatar"
+					
+				},
+				{
+					"nombre":"Federico Lopez Calsina",
+					"imagen":"fede",
+					"puesto":"CEO IS"
+					
+				}
+			]
+  		},
+  		{
+			"grupo": "Networking",
+			"titulo": "Redfin listing updates for today",
+			"descripcion": "There are 7 updates for the home on your watchlist: 1 updated MLS listing and 2 homes under contract.",
+			"contenido":"Espacio para explayarse completamente sobre de que se trata esta charla en especial"
+  		}
+  	]
+}

@@ -18,6 +18,7 @@
         
     <script type="text/javascript">
         $(function() {
+			//Carga el tab Sponsors
         	$('#Sponsors').live("pageshow", function() {
 				$.getJSON("http://localhost/endeavornoa/sponsors.json",
 					function (data){
@@ -39,6 +40,29 @@
 					);
 				}
         	}
+
+			//Carga el tab Agenda
+        	$('#Agenda').live("pageshow", function() {
+				$.getJSON("http://localhost/endeavornoa/agenda.json",
+					function (data){
+						window.localStorage.setItem('agenda', JSON.stringify(data));
+						llenarSponsors(data);
+					}
+				).error(function() { onSponsorsError(); });
+			});
+			
+        	function onSponsorsError(){
+        		var data = window.localStorage.getItem('agenda');
+        		if(data != null)
+        			llenarSponsors($.parseJSON(data));
+        		else{
+        			$.getJSON("json/agenda.json", 
+        				function(data){
+							llenarAgenda(data)
+						}
+					);
+				}
+        	}
         	
             // Also works with: var yourStartLatLng = '59.3426606750, 18.0736160278';
             var yourStartLatLng = new google.maps.LatLng(59.3426606750, 18.0736160278);
@@ -47,15 +71,17 @@
                 $('#map_canvas').gmap().bind('init', function(ev, map) {
                     $('#map_canvas').gmap('addMarker', {'position': '57.7973333,12.0502107', 'bounds': true}).click(function() {
                         $('#map_canvas').gmap('openInfoWindow', {'content': 'Hello World!'}, this);
-                });
-            });
-        });
+ 	     	    });
+	        });
+	    });
         
+		//carga mapa del tab #Donde
         $('#Donde').live("pageshow", function() {
                     console.log("pageshow");
                     $('#map_canvas').gmap('refresh');
         });
         
+		//Llena la lista de sponsors a traves de un json como parametro
         function llenarSponsors(data){
         	var $page = $("#Sponsors");
         	
@@ -88,8 +114,32 @@
 			});
 			$lista.listview();
         }
-        
-        $(document).ready(function(){
+		
+		function llenarAgenda(data){
+        	var $page = $("#Agenda");
+        	
+        	$page.find(".content").empty();
+        	
+        	$page.find(".content").html("<ul></ul>");
+        	
+        	$lista = $page.find(".content ul");
+        	
+        	var items = [];
+			$.each(data, function(key, val) {
+				var strHtml = '<li data-role="list-divider"> ' + key + ' </li>';
+				var item = $(strHtml);
+				$lista.append(item);
+				$.each(val, function(key, val) {
+					strHtml = '<li data-filtertext='+val.grupo+'><a href="detalle_charla.html"><p><strong>'+val.grupo+'</strong></p><h1><strong>'+val.titulo+'</strong></h1><p>'+val.descripcion+'</p></a></li>'; 
+					var item = $(strHtml);
+					$lista.append(item);
+				});
+			});
+			$lista.listview();
+        }
+      
+		//Llena llena los tweets
+       $(document).ready(function(){
             $('#tweetFeed').jTweetsAnywhere({
                 searchParams: 'q=Endeavor_Noa',
                 count: 20,
@@ -106,36 +156,39 @@
                 },
                 showTweetBox: false,
             });
+			
+			//Llena el tab agenda con el div #Agenda que esta dentro del archivo index.html
 			 var clicked1 = "false";
             
-               	$("#filterBar").delegate("a", "click", function () {
-	                 /*if (clicked1 == "false")
-	                 {
-	                     clicked1 = "true";*/
-	                 if ($(this).text().toString() != "Todos")
-	                 {
-	                     $("div.ui-input-search").find("input").val($(this).text());
-	                     $("div.ui-input-search").find("input").keyup();
-	                 }
-	                 else
-	                 {
-	                     $("div.ui-input-search").find("input").val("");
-	                     $("div.ui-input-search").find("input").keyup();
-	                 }
-	                 /*}
-	                 /*else
-	                 {
-	                     clicked1 = "false";
-                    
-	                     //$(this).removeClass('ui-btn-inline ui-btn-active ui-btn-hover-c ui-btn-up-c');
-	                     //$(this).removeClass().addClass('ui-btn');
-	                     $("div.ui-input-search").find("input").val("");
-	                     $("div.ui-input-search").find("input").keyup();
-                    
-	                     //"ui-btn ui-btn-inline ui-btn-active ui-btn-hover-c ui-btn-up-c"
-	                 }*/
-	             });
+             $("#filterBar").delegate("a", "click", function () {
+	             /*if (clicked1 == "false")
+                 {
+                     clicked1 = "true";*/
+                 if ($(this).text().toString() != "Todos")
+                 {
+                     $("div.ui-input-search").find("input").val($(this).text());
+                     $("div.ui-input-search").find("input").keyup();
+                 }
+                 else
+                 {
+                     $("div.ui-input-search").find("input").val("");
+                     $("div.ui-input-search").find("input").keyup();
+                 }
+                 /*}
+                 /*else
+                 {
+                     clicked1 = "false";
+                  
+                     //$(this).removeClass('ui-btn-inline ui-btn-active ui-btn-hover-c ui-btn-up-c');
+                     //$(this).removeClass().addClass('ui-btn');
+                     $("div.ui-input-search").find("input").val("");
+                     $("div.ui-input-search").find("input").keyup();
+                  
+                     //"ui-btn ui-btn-inline ui-btn-active ui-btn-hover-c ui-btn-up-c"
+                 }*/
+	           });
         });
+		
     </script>
 
     <style type="text/css">
@@ -307,54 +360,12 @@ Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce 
             </div>
         </div>
         
-        <div data-role="content">
-            
-            <ul data-role="listview" data-filter="true" id="testlist">
-                <li data-role="list-divider">10:30</li>
-                <li data-filtertext="Academia"><a href="detalle_charla.html">
-                    <p><strong>Academia</strong></p>
-                    <h1><strong>Redfin listing updates for today</strong></h1>
-                    <p>There are 3 updates for the home on your watchlist: 1 updated MLS listing and 2 homes under contract.</p>
-                </a></li>
-                <li data-filtertext="Academia"><a href="">
-                    <p><strong>Academia</strong></p>
-                    <h1><strong>Redfin listing updates for today</strong></h1>
-                    <p>There are 3 updates for the home on your watchlist: 1 updated MLS listing and 2 homes under contract.</p>
-                </a></li>
-                <li data-filtertext="Academia"><a href="">
-                    <p><strong>Academia</strong></p>
-                    <h1><strong>Redfin listing updates for today</strong></h1>
-                    <p>There are 3 updates for the home on your watchlist: 1 updated MLS listing and 2 homes under contract.</p>
-                </a></li>
-                <li data-role="list-divider">14:00</li>
-                <li data-filtertext="Talks"><a href="">
-                    <p><strong>Talks</strong></p>
-                    <h1><strong>Redfin listing updates for today</strong></h1>
-                    <p>There are 3 updates for the home on your watchlist: 1 updated MLS listing and 2 homes under contract.</p>
-                </a></li>
-                <li data-filtertext="Talks"><a href="">
-                    <p><strong>Talks</strong></p>
-                    <h1><strong>Redfin listing updates for today</strong></h1>
-                    <p>There are 3 updates for the home on your watchlist: 1 updated MLS listing and 2 homes under contract.</p>
-                </a></li>
-                <li data-role="list-divider">16:00</li>
-                <li data-filtertext="Networking"><a href="">
-                    <p><strong>Networking</strong></p>
-                    <h1><strong>Redfin listing updates for today</strong></h1>
-                    <p>There are 3 updates for the home on your watchlist: 1 updated MLS listing and 2 homes under contract.</p>
-                </a></li>
-                <li data-filtertext="Networking"><a href="">
-                    <p><strong>Networking</strong></p>
-                    <h1><strong>Redfin listing updates for today</strong></h1>
-                    <p>There are 3 updates for the home on your watchlist: 1 updated MLS listing and 2 homes under contract.</p>
-                </a></li>
-                <li data-filtertext="Networking"><a href="">
-                    <p><strong>Networking</strong></p>
-                    <h1><strong>Redfin listing updates for today</strong></h1>
-                    <p>There are 3 updates for the home on your watchlist: 1 updated MLS listing and 2 homes under contract.</p>
-                </a></li>
-            </ul>
-        </div>
+        <div data-role="content" class="content">
+		</div>
+      
     </div>
+
+	<!--Detalle charla-->
+
 </body>
 </html>
