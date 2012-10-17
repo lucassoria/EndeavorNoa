@@ -64,6 +64,29 @@
 				}
         	}
         	
+			//Carga el tab Speakers
+        	$('#speakers').live("pageshow", function() {
+				$.getJSON("http://localhost/endeavornoa/speakers.json",
+					function (data){
+						window.localStorage.setItem('speakers', JSON.stringify(data));
+						llenarSponsors(data);
+					}
+				).error(function() { onSponsorsError(); });
+			});
+			
+        	function onSponsorsError(){
+        		var data = window.localStorage.getItem('speakers');
+        		if(data != null)
+        			llenarSponsors($.parseJSON(data));
+        		else{
+        			$.getJSON("json/speakers.json", 
+        				function(data){
+							llenarSpeakers(data)
+						}
+					);
+				}
+        	}
+
             // Also works with: var yourStartLatLng = '59.3426606750, 18.0736160278';
             var yourStartLatLng = new google.maps.LatLng(59.3426606750, 18.0736160278);
             $('#map_canvas').gmap({'center': yourStartLatLng});
@@ -115,6 +138,35 @@
 			$lista.listview();
         }
 		
+		//Llena la lista de speakers a traves de un json como parametro
+        function llenarSpeakers(data){
+        	var $page = $("#speakers");
+        	
+        	$page.find(".content").empty();
+        	
+        	$page.find(".content").html("<ul></ul>");
+        	
+        	$lista = $page.find(".content ul");
+        	
+        	var items = [];
+			$.each(data, function(key, val) {
+				var strHtml = '<li data-role="list-divider"> ' + key + ' </li>';
+				var item = $(strHtml);
+				$lista.append(item);
+				$.each(val, function(key, val) {
+					strHtml = '<li><a href="#detalleSpeaker"><img src="'+val.imagen+'"/><h1><strong>'+val.nombre+'</strong></h1><p>'+val.puesto+'</p></a></li>';
+					$lista.append($(strHtml));
+					$lista.find("a:last").jqmData("speaker",JSON.stringify(val));
+				});
+			});
+			$lista.listview();
+			$lista.find('a').click(
+				function(){
+					var $this = $(this);
+					$("#detalleSpeaker").jqmData("speaker",$this.jqmData("speaker"));
+				}
+			);
+        }
 		//Llena la lista de charlas a traves de un json como parametro
 		function llenarAgenda(data){
         	var $page = $("#Agenda");
@@ -169,9 +221,7 @@
 			 var clicked1 = "false";
             
              $("#filterBar").delegate("a", "click", function () {
-	             /*if (clicked1 == "false")
-                 {
-                     clicked1 = "true";*/
+
                  if ($(this).text().toString() != "Todos")
                  {
                      $("div.ui-input-search").find("input").val($(this).text());
@@ -182,18 +232,6 @@
                      $("div.ui-input-search").find("input").val("");
                      $("div.ui-input-search").find("input").keyup();
                  }
-                 /*}
-                 /*else
-                 {
-                     clicked1 = "false";
-                  
-                     //$(this).removeClass('ui-btn-inline ui-btn-active ui-btn-hover-c ui-btn-up-c');
-                     //$(this).removeClass().addClass('ui-btn');
-                     $("div.ui-input-search").find("input").val("");
-                     $("div.ui-input-search").find("input").keyup();
-                  
-                     //"ui-btn ui-btn-inline ui-btn-active ui-btn-hover-c ui-btn-up-c"
-                 }*/
 	           });
 	
 			
@@ -272,7 +310,7 @@
                     <li><a href="#XE2012" class="ui-btn-active ui-state-persist">XE2012</a></li>
                     <li><a href="#Agenda">Agenda</a></li>
                     <li><a href="#Tweets">Tweets</a></li>
-                    <li><a href="speakers.html">Speakers</a></li>
+                    <li><a href="#speakers">Speakers</a></li>
                 </ul>
             </div>
             
@@ -462,6 +500,23 @@ Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce 
         <div data-role="footer">
             <a data-rel="back">Volver</a>
         </div>
+    </div>
+
+	<!--Detalle Sepeaker-->
+	
+	<div data-role="page" id="speakers">
+        <div data-role="header" data-id="headerBar" data-position="fixed" data-theme="a">
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="index.html">XE2012</a></li>
+                    <li><a href="agenda.html">Agenda</a></li>
+                    <li><a href="tweets.html">Tweets</a></li>
+                    <li><a href="speakers.html" class="ui-btn-active ui-state-persist">Speakers</a></li>
+                </ul>
+            </div>
+        </div>
+    <div data-role="content" class="content">
+        
     </div>
 	
 </body>
