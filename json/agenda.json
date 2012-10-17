@@ -9,13 +9,15 @@
 				{
 					"nombre":"Andres Jara Werchau",
 					"imagen":"andresito.png",
-					"puesto":"CEO Yalvatar"
+					"puesto":"CEO Yalvatar",
+					"bio":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum posuere sollicitudin nunc. Ut rutrum tempor bibendum. In in nibh tellus, at imperdiet elit. Phasellus pretium, quam sit amet pretium rhoncus, justo eros luctus erat, nec sagittis tortor velit at metus. Cras vitae orci augue, at adipiscing diam. Phasellus accumsan placerat nulla, in facilisis odio commodo sed. Pellentesque porta turpis sit amet mauris laoreet ut placerat urna adipiscing. Morbi diam turpis, accumsan eget dignissim et, blandit non ligula. Curabitur laoreet suscipit arcu non porttitor. Aliquam quis lacinia tortor.Curabitur pulvinar nibh id elit dictum feugiat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Suspendisse faucibus auctor massa et suscipit. Aliquam id pulvinar ligula. Vestibulum rutrum, dui quis rhoncus euismod, ligula eros pretium est, non placerat felis diam id mi. Fusce ac eros risus. Sed vestibulum leo risus."
 					
 				},
 				{
 					"nombre":"Federico Lopez Calsina",
-					"imagen":"fede",
-					"puesto":"CEO IS"
+					"imagen":"andresito.png",
+					"puesto":"CEO IS",
+					"bio":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum posuere sollicitudin nunc. Ut rutrum tempor bibendum. In in nibh tellus, at imperdiet elit. Phasellus pretium, quam sit amet pretium rhoncus, justo eros luctus erat, nec sagittis tortor velit at metus. Cras vitae orci augue, at adipiscing diam. Phasellus accumsan placerat nulla, in facilisis odio commodo sed. Pellentesque porta turpis sit amet mauris laoreet ut placerat urna adipiscing. Morbi diam turpis, accumsan eget dignissim et, blandit non ligula. Curabitur laoreet suscipit arcu non porttitor. Aliquam quis lacinia tortor.Curabitur pulvinar nibh id elit dictum feugiat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Suspendisse faucibus auctor massa et suscipit. Aliquam id pulvinar ligula. Vestibulum rutrum, dui quis rhoncus euismod, ligula eros pretium est, non placerat felis diam id mi. Fusce ac eros risus. Sed vestibulum leo risus."
 					
 				}
 			]
@@ -57,13 +59,15 @@
 				{
 					"nombre":"Andres Jara Werchau",
 					"imagen":"andresito.png",
-					"puesto":"CEO Yalvatar"
+					"puesto":"CEO Yalvatar",
+					"bio":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum posuere sollicitudin nunc. Ut rutrum tempor bibendum. In in nibh tellus, at imperdiet elit. Phasellus pretium, quam sit amet pretium rhoncus, justo eros luctus erat, nec sagittis tortor velit at metus. Cras vitae orci augue, at adipiscing diam. Phasellus accumsan placerat nulla, in facilisis odio commodo sed. Pellentesque porta turpis sit amet mauris laoreet ut placerat urna adipiscing. Morbi diam turpis, accumsan eget dignissim et, blandit non ligula. Curabitur laoreet suscipit arcu non porttitor. Aliquam quis lacinia tortor.Curabitur pulvinar nibh id elit dictum feugiat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Suspendisse faucibus auctor massa et suscipit. Aliquam id pulvinar ligula. Vestibulum rutrum, dui quis rhoncus euismod, ligula eros pretium est, non placerat felis diam id mi. Fusce ac eros risus. Sed vestibulum leo risus."
 					
 				},
 				{
 					"nombre":"Federico Lopez Calsina",
 					"imagen":"andresito.png",
-					"puesto":"CEO IS"
+					"puesto":"CEO IS",
+					"bio":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum posuere sollicitudin nunc. Ut rutrum tempor bibendum. In in nibh tellus, at imperdiet elit. Phasellus pretium, quam sit amet pretium rhoncus, justo eros luctus erat, nec sagittis tortor velit at metus. Cras vitae orci augue, at adipiscing diam. Phasellus accumsan placerat nulla, in facilisis odio commodo sed. Pellentesque porta turpis sit amet mauris laoreet ut placerat urna adipiscing. Morbi diam turpis, accumsan eget dignissim et, blandit non ligula. Curabitur laoreet suscipit arcu non porttitor. Aliquam quis lacinia tortor.Curabitur pulvinar nibh id elit dictum feugiat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Suspendisse faucibus auctor massa et suscipit. Aliquam id pulvinar ligula. Vestibulum rutrum, dui quis rhoncus euismod, ligula eros pretium est, non placerat felis diam id mi. Fusce ac eros risus. Sed vestibulum leo risus."
 					
 				}
 			]

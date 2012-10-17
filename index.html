@@ -124,7 +124,9 @@
         	$page.find(".content").html("<ul></ul>");
         	
         	$lista = $page.find(".content ul");
-        	
+        	$lista.attr("data-filter","true");
+			$lista.attr("data-role","listview");
+			$lista.attr("id","testlist" );
         	var items = [];
 			$.each(data, function(key, val) {
 				var strHtml = '<li data-role="list-divider"> ' + key + ' </li>';
@@ -209,7 +211,7 @@
 					$lista=$page.find(".content ul");
 					$lista.append($('<li data-role="list-divider"> SPEAKERS </li>'));		
 					$.each(data.speakers, function(key, val){
-						strHtml = '<li><a href="detalle_speaker.html"><img src="'+val.imagen+'"/><h1><strong>'+val.nombre+'</strong></h1><p>'+val.puesto+'</p></a></li>';
+						strHtml = '<li><a href="#detalleSpeaker"><img src="'+val.imagen+'"/><h1><strong>'+val.nombre+'</strong></h1><p>'+val.puesto+'</p></a></li>';
 						$lista.append($(strHtml));
 						$lista.find("a:last").jqmData("speaker",JSON.stringify(val));
 					});
@@ -220,6 +222,21 @@
 							$("#detalleSpeaker").jqmData("speaker",$this.jqmData("speaker"));
 						}
 					);
+				}
+			);
+			
+			//al mostrar la pagina detalleSpeaker
+			$('#detalleSpeaker').live(
+				"pageshow", 
+				function() {
+					var $page = $('#detalleSpeaker');
+					var data = $.parseJSON($page.jqmData("speaker"));
+					$page.find("div[data-role='header'] h1").remove();
+					$page.find("div[data-role='header']").append('<h1 class="ui-title" role="heading" aria-level="1">SPEAKER</h1>');
+					$page.find(".content").empty();
+					strHtml = '<div style="display:block;padding:1em .8em;margin:0"><div style="float:left;margin-right:10px;"><img src="'+data.imagen+'"></div><div style="background-image:-webkit-linear-gradient(top,white,#FBFBFB 3%,#E1E1E1);padding:0.5em"><h4>'+data.nombre+'</h4><p>'+data.puesto+'</p></div></div><div style="padding:1em 0.8em;clear:both"><p>Biografia del speaker</p><p>'+data.bio+'</p></div>';
+					$page.find(".content").append(strHtml);
+					
 				}
 			);
         });
@@ -411,7 +428,7 @@ Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce 
                     <li><a href="speakers.html">Speakers</a></li>
                 </ul>
             </div>
-			<h1>Titulo de la charla</h1>
+			<h1></h1>
         </div>
         
         <div data-role="content" class="content">
@@ -423,5 +440,29 @@ Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce 
             <a data-rel="back">Volver</a>
         </div>
     </div>
+
+	<!--Detalle Sepeaker-->
+	<div data-role="page" id="detalleSpeaker">
+        <div data-role="header" data-id="headerBar" data-position="fixed">
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="index.html">XE2012</a></li>
+                    <li><a href="agenda.html">Agenda</a></li>
+                    <li><a href="tweets.html">Tweets</a></li>
+                    <li><a href="speakers.html" class="ui-btn-active ui-state-persist">Speakers</a></li>
+                </ul>
+            </div>
+            <h1></h1>
+        </div>
+        
+        <div data-role="content" class="content">
+            
+        </div>
+        
+        <div data-role="footer">
+            <a data-rel="back">Volver</a>
+        </div>
+    </div>
+	
 </body>
 </html>
