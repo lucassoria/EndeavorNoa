@@ -115,6 +115,7 @@
 			$lista.listview();
         }
 		
+		//Llena la lista de charlas a traves de un json como parametro
 		function llenarAgenda(data){
         	var $page = $("#Agenda");
         	
@@ -130,12 +131,17 @@
 				var item = $(strHtml);
 				$lista.append(item);
 				$.each(val, function(key, val) {
-					strHtml = '<li data-filtertext='+val.grupo+'><a href="detalle_charla.html"><p><strong>'+val.grupo+'</strong></p><h1><strong>'+val.titulo+'</strong></h1><p>'+val.descripcion+'</p></a></li>'; 
+					strHtml = '<li data-filtertext='+val.grupo+'><a href="#detalleCharla"><p><strong>'+val.grupo+'</strong></p><h1><strong>'+val.titulo+'</strong></h1><p>'+val.descripcion+'</p></a></li>'; 
 					var item = $(strHtml);
 					$lista.append(item);
+					$lista.find("a:last").jqmData("agenda",JSON.stringify(val));
 				});
 			});
 			$lista.listview();
+			$lista.find('a').click(function(){
+				var $this = $(this);
+				$("#detalleCharla").jqmData("agenda",$this.jqmData("agenda"));
+			});
         }
       
 		//Llena llena los tweets
@@ -187,6 +193,35 @@
                      //"ui-btn ui-btn-inline ui-btn-active ui-btn-hover-c ui-btn-up-c"
                  }*/
 	           });
+	
+			
+
+			//al mostrar la pagina detalleCharla
+			$('#detalleCharla').live(
+				"pageshow", 
+				function() {
+					var $page = $('#detalleCharla');
+					var data = $.parseJSON($page.jqmData("agenda"));
+					$page.find("div[data-role='header'] h1").remove();
+					$page.find("div[data-role='header']").append('<h1 class="ui-title" role="heading" aria-level="1">' + data.titulo + '</h1>');
+					$page.find(".content").empty();
+					$page.find(".content").html("<h4>"+data.descripcion+"</h4><p>"+data.contenido+"</p><ul></ul>");
+					$lista=$page.find(".content ul");
+					$lista.append($('<li data-role="list-divider"> SPEAKERS </li>'));		
+					$.each(data.speakers, function(key, val){
+						strHtml = '<li><a href="detalle_speaker.html"><img src="'+val.imagen+'"/><h1><strong>'+val.nombre+'</strong></h1><p>'+val.puesto+'</p></a></li>';
+						$lista.append($(strHtml));
+						$lista.find("a:last").jqmData("speaker",JSON.stringify(val));
+					});
+					$lista.listview();
+					$lista.find('a').click(
+						function(){
+							var $this = $(this);
+							$("#detalleSpeaker").jqmData("speaker",$this.jqmData("speaker"));
+						}
+					);
+				}
+			);
         });
 		
     </script>
@@ -366,6 +401,27 @@ Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce 
     </div>
 
 	<!--Detalle charla-->
-
+	<div data-role="page" id="detalleCharla">
+        <div data-role="header" data-id="headerBar" data-position="fixed" data-theme="a">
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="index.html">XE2012</a></li>
+                    <li><a href="agenda.html" class="ui-btn-active ui-state-persist">Agenda</a></li>
+                    <li><a href="tweets.html">Tweets</a></li>
+                    <li><a href="speakers.html">Speakers</a></li>
+                </ul>
+            </div>
+			<h1>Titulo de la charla</h1>
+        </div>
+        
+        <div data-role="content" class="content">
+            
+            
+        </div>
+        
+        <div data-role="footer">
+            <a data-rel="back">Volver</a>
+        </div>
+    </div>
 </body>
 </html>
