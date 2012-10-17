@@ -148,16 +148,11 @@
         	
         	$lista = $page.find(".content ul");
         	
-        	var items = [];
+        	$lista.attr("data-autodividers", "true");
 			$.each(data, function(key, val) {
-				var strHtml = '<li data-role="list-divider"> ' + key + ' </li>';
-				var item = $(strHtml);
-				$lista.append(item);
-				$.each(val, function(key, val) {
-					strHtml = '<li><a href="#detalleSpeaker"><img src="'+val.imagen+'"/><h1><strong>'+val.nombre+'</strong></h1><p>'+val.puesto+'</p></a></li>';
-					$lista.append($(strHtml));
-					$lista.find("a:last").jqmData("speaker",JSON.stringify(val));
-				});
+				strHtml = '<li><a href="#detalleSpeaker"><img src="'+val.imagen+'"/><h1><strong>'+val.nombre+'</strong></h1><p>'+val.puesto+'</p></a></li>';
+				$lista.append($(strHtml));
+				$lista.find("a:last").jqmData("speaker",JSON.stringify(val));
 			});
 			$lista.listview();
 			$lista.find('a').click(
