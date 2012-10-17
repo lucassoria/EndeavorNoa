@@ -48,10 +48,10 @@
 						window.localStorage.setItem('agenda', JSON.stringify(data));
 						llenarSponsors(data);
 					}
-				).error(function() { onSponsorsError(); });
+				).error(function() { onAgendaError(); });
 			});
 			
-        	function onSponsorsError(){
+        	function onAgendaError(){
         		var data = window.localStorage.getItem('agenda');
         		if(data != null)
         			llenarSponsors($.parseJSON(data));
@@ -71,10 +71,10 @@
 						window.localStorage.setItem('speakers', JSON.stringify(data));
 						llenarSponsors(data);
 					}
-				).error(function() { onSponsorsError(); });
+				).error(function() { onSpeakersError(); });
 			});
 			
-        	function onSponsorsError(){
+        	function onSpeakersError(){
         		var data = window.localStorage.getItem('speakers');
         		if(data != null)
         			llenarSponsors($.parseJSON(data));
@@ -100,8 +100,7 @@
         
 		//carga mapa del tab #Donde
         $('#Donde').live("pageshow", function() {
-                    console.log("pageshow");
-                    $('#map_canvas').gmap('refresh');
+            $('#map_canvas').gmap('refresh');
         });
         
 		//Llena la lista de sponsors a traves de un json como parametro
@@ -212,7 +211,7 @@
                 showTweetBox: false,
             });
 			
-			//Llena el tab agenda con el div #Agenda que esta dentro del archivo index.html
+			//Llena el tab agenda con el div #Agenda que esta dentro del archivo #XE2012
 			 var clicked1 = "false";
             
              $("#filterBar").delegate("a", "click", function () {
@@ -338,9 +337,9 @@ Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce 
             <div data-role="navbar">
                 <ul>
                     <li><a href="#XE2012" class="ui-btn-active ui-state-persist">XE2012</a></li>
-                    <li><a href="agenda.html">Agenda</a></li>
+                    <li><a href="#Agenda">Agenda</a></li>
                     <li><a href="#Tweets">Tweets</a></li>
-                    <li><a href="speakers.html">Speakers</a></li>
+                    <li><a href="#speakers">Speakers</a></li>
                 </ul>
             </div>
             
@@ -369,9 +368,9 @@ Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce 
             <div data-role="navbar">
                 <ul>
                     <li><a href="#XE2012" class="ui-btn-active ui-state-persist">XE2012</a></li>
-                    <li><a href="agenda.html">Agenda</a></li>
+                    <li><a href="#Agenda">Agenda</a></li>
                     <li><a href="#Tweets">Tweets</a></li>
-                    <li><a href="speakers.html">Speakers</a></li>
+                    <li><a href="#speakers">Speakers</a></li>
                 </ul>
             </div>
             
@@ -384,24 +383,6 @@ Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce 
             </div>
         </div>
         <div data-role="content" class="content">
-            <ul data-role="listview" id="sponsors_list">
-                <li data-role="list-divider">Gold</li>
-                <li data-icon="false"><a href=""><img src="apple.png"><h3> Apple </h3></a></li>
-                <li data-icon="false"><a href=""><img src="apple.png"><h3> Apple </h3></a></li>
-                <li data-icon="false"><a href=""><img src="apple.png"><h3> Apple </h3></a></li>
-                <li data-role="list-divider">Silver</li>
-                <li data-icon="false"><a href="">Sponsor2</a></li>
-                <li data-icon="false"><a href="">Sponsor2</a></li>
-                <li data-icon="false"><a href="">Sponsor2</a></li>
-                <li data-icon="false"><a href="">Sponsor2</a></li>
-                <li data-icon="false"><a href="">Sponsor2</a></li>
-                <li data-role="list-divider">Bronce</li>
-                <li data-icon="false"><a href="">Sponsor3</a></li>
-                <li data-icon="false"><a href="">Sponsor3</a></li>
-                <li data-icon="false"><a href="">Sponsor3</a></li>
-                <li data-icon="false"><a href="">Sponsor3</a></li>
-                <li data-icon="false"><a href="">Sponsor3</a></li>
-            </ul>
         </div>
     </div>
     
@@ -411,9 +392,9 @@ Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce 
             <div data-role="navbar">
                 <ul>
                     <li><a href="#XE2012">XE2012</a></li>
-                    <li><a href="agenda.html">Agenda</a></li>
+                    <li><a href="#Agenda">Agenda</a></li>
                     <li><a href="#Tweets" class="ui-btn-active ui-state-persist">Tweets</a></li>
-                    <li><a href="speakers.html">Speakers</a></li>
+                    <li><a href="#speakers">Speakers</a></li>
                 </ul>
             </div>
         </div>
@@ -428,10 +409,10 @@ Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce 
         <div data-role="header" data-id="headerBar" data-position="fixed" data-theme="a">
             <div data-role="navbar">
                 <ul>
-                    <li><a href="index.html">XE2012</a></li>
-                    <li><a href="agenda.html" class="ui-btn-active ui-state-persist">Agenda</a></li>
-                    <li><a href="tweets.html">Tweets</a></li>
-                    <li><a href="speakers.html">Speakers</a></li>
+                    <li><a href="#XE2012">XE2012</a></li>
+                    <li><a href="#Agenda" class="ui-btn-active ui-state-persist">Agenda</a></li>
+                    <li><a href="#Tweets">Tweets</a></li>
+                    <li><a href="#speakers">Speakers</a></li>
                 </ul>
             </div>
             
@@ -455,10 +436,10 @@ Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce 
         <div data-role="header" data-id="headerBar" data-position="fixed" data-theme="a">
             <div data-role="navbar">
                 <ul>
-                    <li><a href="index.html">XE2012</a></li>
-                    <li><a href="agenda.html" class="ui-btn-active ui-state-persist">Agenda</a></li>
-                    <li><a href="tweets.html">Tweets</a></li>
-                    <li><a href="speakers.html">Speakers</a></li>
+                    <li><a href="#XE2012">XE2012</a></li>
+                    <li><a href="#Agenda" class="ui-btn-active ui-state-persist">Agenda</a></li>
+                    <li><a href="#Tweets">Tweets</a></li>
+                    <li><a href="#speakers">Speakers</a></li>
                 </ul>
             </div>
 			<h1></h1>
@@ -479,10 +460,10 @@ Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce 
         <div data-role="header" data-id="headerBar" data-position="fixed">
             <div data-role="navbar">
                 <ul>
-                    <li><a href="index.html">XE2012</a></li>
-                    <li><a href="agenda.html">Agenda</a></li>
-                    <li><a href="tweets.html">Tweets</a></li>
-                    <li><a href="speakers.html" class="ui-btn-active ui-state-persist">Speakers</a></li>
+                    <li><a href="#XE2012">XE2012</a></li>
+                    <li><a href="#Agenda">Agenda</a></li>
+                    <li><a href="#Tweets">Tweets</a></li>
+                    <li><a href="#speakers" class="ui-btn-active ui-state-persist">Speakers</a></li>
                 </ul>
             </div>
             <h1></h1>
@@ -503,10 +484,10 @@ Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce 
         <div data-role="header" data-id="headerBar" data-position="fixed" data-theme="a">
             <div data-role="navbar">
                 <ul>
-                    <li><a href="index.html">XE2012</a></li>
-                    <li><a href="agenda.html">Agenda</a></li>
-                    <li><a href="tweets.html">Tweets</a></li>
-                    <li><a href="speakers.html" class="ui-btn-active ui-state-persist">Speakers</a></li>
+                    <li><a href="#XE2012">XE2012</a></li>
+                    <li><a href="#Agenda">Agenda</a></li>
+                    <li><a href="#Tweets">Tweets</a></li>
+                    <li><a href="#speakers" class="ui-btn-active ui-state-persist">Speakers</a></li>
                 </ul>
             </div>
         </div>
