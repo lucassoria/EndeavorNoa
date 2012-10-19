@@ -19,7 +19,7 @@
     <script type="text/javascript">
         $(function() {
 			//Carga el tab Sponsors
-        	$('#Sponsors').live("pageshow", function() {
+        	$('#Sponsors').live("pagebeforeshow", function() {
 				$.getJSON("http://localhost/endeavornoa/sponsors.json",
 					function (data){
 						window.localStorage.setItem('sponsors', JSON.stringify(data));
@@ -42,7 +42,7 @@
         	}
 
 			//Carga el tab Agenda
-        	$('#Agenda').live("pageshow", function() {
+        	$('#Agenda').live("pagebeforeshow", function() {
 				$.getJSON("http://localhost/endeavornoa/agenda.json",
 					function (data){
 						window.localStorage.setItem('agenda', JSON.stringify(data));
@@ -65,7 +65,7 @@
         	}
         	
 			//Carga el tab Speakers
-        	$('#speakers').live("pageshow", function() {
+        	$('#speakers').live("pagebeforeshow", function() {
 				$.getJSON("http://localhost/endeavornoa/speakers.json",
 					function (data){
 						window.localStorage.setItem('speakers', JSON.stringify(data));
@@ -99,7 +99,7 @@
 	    });
         
 		//carga mapa del tab #Donde
-        $('#Donde').live("pageshow", function() {
+        $('#Donde').live("pagebeforeshow", function() {
             $('#map_canvas').gmap('refresh');
         });
         
@@ -229,7 +229,15 @@
 	           });
 	
 			
-
+			$('#detalleCharla').live(
+				"pagehide", 
+				function() {
+					var $page = $('#detalleCharla');
+					$page.find("div[data-role='header'] h1").empty();
+					$page.find(".content").empty();
+				}
+			);
+			
 			//al mostrar la pagina detalleCharla
 			$('#detalleCharla').live(
 				"pageshow", 
@@ -257,6 +265,15 @@
 							}
 						);
 					}
+				}
+			);
+			
+			$('#detalleSpeaker').live(
+				"pagehide", 
+				function() {
+					var $page = $('#detalleSpeaker');
+					$page.find("div[data-role='header'] h1").empty();
+					$page.find(".content").empty();
 				}
 			);
 			
