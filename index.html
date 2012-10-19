@@ -239,21 +239,24 @@
 					$page.find("div[data-role='header'] h1").remove();
 					$page.find("div[data-role='header']").append('<h1 class="ui-title" role="heading" aria-level="1">' + data.titulo + '</h1>');
 					$page.find(".content").empty();
-					$page.find(".content").html("<h4>"+data.descripcion+"</h4><p>"+data.contenido+"</p><ul></ul>");
-					$lista=$page.find(".content ul");
-					$lista.append($('<li data-role="list-divider"> SPEAKERS </li>'));		
-					$.each(data.speakers, function(key, val){
-						strHtml = '<li><a href="#detalleSpeaker"><img src="'+val.imagen+'"/><h1><strong>'+val.nombre+'</strong></h1><p>'+val.puesto+'</p></a></li>';
-						$lista.append($(strHtml));
-						$lista.find("a:last").jqmData("speaker",JSON.stringify(val));
-					});
-					$lista.listview();
-					$lista.find('a').click(
-						function(){
-							var $this = $(this);
-							$("#detalleSpeaker").jqmData("speaker",$this.jqmData("speaker"));
-						}
-					);
+					$page.find(".content").html("<h4>"+data.descripcion+"</h4><p>"+data.contenido+"</p>");
+					if(data.speakers){
+						$page.find(".content").append($("<ul></ul>"));
+						$lista=$page.find(".content ul");
+						$lista.append($('<li data-role="list-divider"> SPEAKERS </li>'));		
+						$.each(data.speakers, function(key, val){
+							strHtml = '<li><a href="#detalleSpeaker"><img src="'+val.imagen+'"/><h1><strong>'+val.nombre+'</strong></h1><p>'+val.puesto+'</p></a></li>';
+							$lista.append($(strHtml));
+							$lista.find("a:last").jqmData("speaker",JSON.stringify(val));
+						});
+						$lista.listview();
+						$lista.find('a').click(
+							function(){
+								var $this = $(this);
+								$("#detalleSpeaker").jqmData("speaker",$this.jqmData("speaker"));
+							}
+						);
+					}
 				}
 			);
 			
