@@ -86,22 +86,23 @@
 					);
 				}
         	}
+        	
+        	
 
-            // Also works with: var yourStartLatLng = '59.3426606750, 18.0736160278';
-            var yourStartLatLng = new google.maps.LatLng(59.3426606750, 18.0736160278);
-            $('#map_canvas').gmap({'center': yourStartLatLng});
-                
-                $('#map_canvas').gmap().bind('init', function(ev, map) {
-                    $('#map_canvas').gmap('addMarker', {'position': '57.7973333,12.0502107', 'bounds': true}).click(function() {
-                        $('#map_canvas').gmap('openInfoWindow', {'content': 'Hello World!'}, this);
- 	     	    });
-	        });
+			$('#Donde').live("pageshow", function() {
+				var yourStartLatLng = '57.7973333,12.0502107';
+				
+				$('#map_canvas').gmap({'center': yourStartLatLng});
+					
+				$('#map_canvas').gmap().bind('init', function(ev, map) {
+					$('#map_canvas').gmap('option', 'zoom', 18);
+					$('#map_canvas').gmap('addMarker', {'position': '57.7975333,12.0502107'}).click(function() {
+						$('#map_canvas').gmap('openInfoWindow', {'content': 'Hello World!'}, this);
+					});
+				});
+				$('#map_canvas').gmap('refresh');
+			});
 	    });
-        
-		//carga mapa del tab #Donde
-        $('#Donde').live("pagebeforeshow", function() {
-            $('#map_canvas').gmap('refresh');
-        });
         
 		//Llena la lista de sponsors a traves de un json como parametro
         function llenarSponsors(data){
@@ -193,40 +194,50 @@
         }
       
 		//Llena llena los tweets
-       $(document).ready(function(){
-            $('#tweetFeed').jTweetsAnywhere({
-                searchParams: 'q=Endeavor_Noa',
-                count: 20,
-                showTweetFeed: {
-                    showProfileImages: true,
-                    showUserScreenNames: true,
-                    showUserFullNames: true,
-                    showActionReply: true,
-                    showActionRetweet: true,
-                    showActionFavorite: true,
-                    paging: {
-                        mode: "more"
-                    }
-                },
-                showTweetBox: false,
-            });
+       	$(document).ready(function(){
+       	
+       		$('#Tweets').live(
+       			"pagebeforeshow",
+       			function() {
+					$('#tweetFeed').jTweetsAnywhere({
+						searchParams: 'q=Endeavor_Noa',
+						count: 20,
+						showTweetFeed: {
+							showProfileImages: true,
+							showUserScreenNames: true,
+							showUserFullNames: true,
+							showActionReply: true,
+							showActionRetweet: true,
+							showActionFavorite: true,
+							paging: {
+								mode: "more"
+							}
+						},
+						showTweetBox: false,
+					});
+					$('.jta-tweet-list-controls').find("span").html("M&aacute;s Tweets");
+//					$(".jta-tweet-list-controls-button jta-tweet-list-controls-button-more").val("Más Tweets");
+			});
+			
+			$('#Tweets').live(
+       			"pagehide",
+       			function() {
+					$('#tweetFeed').empty();
+			});
 			
 			//Llena el tab agenda con el div #Agenda que esta dentro del archivo #XE2012
-			 var clicked1 = "false";
-            
-             $("#filterBar").delegate("a", "click", function () {
-
-                 if ($(this).text().toString() != "Todos")
-                 {
-                     $("div.ui-input-search").find("input").val($(this).text());
-                     $("div.ui-input-search").find("input").keyup();
-                 }
-                 else
-                 {
-                     $("div.ui-input-search").find("input").val("");
-                     $("div.ui-input-search").find("input").keyup();
-                 }
-	           });
+			var clicked1 = "false";
+			
+			$("#filterBar").delegate("a", "click", function () {
+				if ($(this).text().toString() != "Todos"){
+					$("div.ui-input-search").find("input").val($(this).text());
+					$("div.ui-input-search").find("input").keyup();
+				}
+				else{
+					$("div.ui-input-search").find("input").val("");
+					$("div.ui-input-search").find("input").keyup();
+				}
+			});
 	
 			
 			$('#detalleCharla').live(
