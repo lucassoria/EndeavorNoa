@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="jquery/jquery.mobile-1.2.0.min.css"/>
     <script src="jquery/jquery-1.8.2.min.js"></script>
     <script src="jquery/jquery.mobile-1.2.0.min.js"></script>
+    <script src="cordova-2.0.0.js"></script>
     
     <!-- goole map stuff -->
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
@@ -17,32 +18,59 @@
     <link rel="stylesheet" type="text/css" href="jtweetsanywhere/jquery.jtweetsanywhere-1.3.1.css" />
         
     <script type="text/javascript">
-        $(function() {
-			//Carga el tab Sponsors
-        	$('#Sponsors').live("pagebeforeshow", function() {
-				$.getJSON("http://localhost/endeavornoa/sponsors.json",
-					function (data){
-						window.localStorage.setItem('sponsors', JSON.stringify(data));
-						llenarSponsors(data);
-					}
-				).error(function() { onSponsorsError(); });
-			});
-			
-        	function onSponsorsError(){
-        		var data = window.localStorage.getItem('sponsors');
-        		if(data != null)
-        			llenarSponsors($.parseJSON(data));
-        		else{
-        			$.getJSON("json/sponsors.json", 
-        				function(data){
-							llenarSponsors(data)
-						}
-					);
+    
+    	function onLoad(){
+    		document.addEventListener("deviceready", onDeviceReady, false);
+    		//banderas para saber si la aplicacion paso a background
+    		localStorage.setItem("resumeSponsors", "1");
+    		localStorage.setItem("resumeAgenda", "1");
+    		localStorage.setItem("resumeSpeakers", "1");
+    	}
+    	
+    	//Cordoba esta cargado y ahora se puede llamar a todos su metodo sin problemas
+    	function onDeviceReady(){
+    		document.addEventListener("resume", onResume, false);
+    	}
+    	
+    	function onResume(){
+    		localStorage.setItem("resumeSponsors", "1");
+    		localStorage.setItem("resumeAgenda", "1");
+    		localStorage.setItem("resumeSpeakers", "1");
+    	}
+    	
+    	function traerSponsors(){
+    		$.getJSON("http://localhost/endeavornoa/sponsors.json",
+				function (data){
+					window.localStorage.setItem('sponsors', JSON.stringify(data));
+					llenarSponsors(data);
 				}
-        	}
+			).error(function() { onSponsorsError(); });
+    	}
+			
+		function onSponsorsError(){
+			var data = window.localStorage.getItem('sponsors');
+			if(data != null)
+				llenarSponsors($.parseJSON(data));
+			else{
+				$.getJSON("json/sponsors.json", 
+					function(data){
+						llenarSponsors(data)
+					}
+				);
+			}
+		}
+    
+        $(function() {
+        	
+        	$('#Sponsors').live("pagebeforeshow", function(){
+        		if(localStorage.getItem("resumeSponsors") == "1"){
+ 		       		traerSponsors();
+ 		       		localStorage.setItem("resumeSponsors", "0");
+ 		       	}
+        	});
 
 			//Carga el tab Agenda
-        	$('#Agenda').live("pagebeforeshow", function() {
+        	$('#Agenda').live("pagecreate", function() {
 				$.getJSON("http://localhost/endeavornoa/agenda.json",
 					function (data){
 						window.localStorage.setItem('agenda', JSON.stringify(data));
@@ -65,7 +93,7 @@
         	}
         	
 			//Carga el tab Speakers
-        	$('#speakers').live("pagebeforeshow", function() {
+        	$('#speakers').live("pagecreate", function() {
 				$.getJSON("http://localhost/endeavornoa/speakers.json",
 					function (data){
 						window.localStorage.setItem('speakers', JSON.stringify(data));
@@ -89,7 +117,7 @@
         	
         	
 
-			$('#Donde').live("pageshow", function() {
+			$('#Donde').live("pageinit", function() {
 				var yourStartLatLng = '57.7973333,12.0502107';
 				
 				$('#map_canvas').gmap({'center': yourStartLatLng});
@@ -327,7 +355,7 @@
     </style>
     
 </head>
-<body>
+<body onload="onLoad()">
     <div data-role="page" id="XE2012">
         <div data-role="header" data-id="headerBar" data-position="fixed" data-theme="a">
             <div data-role="navbar">
