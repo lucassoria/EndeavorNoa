@@ -59,6 +59,50 @@
 				);
 			}
 		}
+		
+		function traerAgenda(){
+    		$.getJSON("http://localhost/endeavornoa/agenda.json",
+				function (data){
+					window.localStorage.setItem('agenda', JSON.stringify(data));
+					llenarSponsors(data);
+				}
+			).error(function() { onAgendaError(); });
+    	}
+
+		function onAgendaError(){
+    		var data = window.localStorage.getItem('agenda');
+    		if(data != null)
+    			llenarSponsors($.parseJSON(data));
+    		else{
+    			$.getJSON("json/agenda.json", 
+    				function(data){
+						llenarAgenda(data)
+					}
+				);
+			}
+    	}
+
+		function traerSpeakers(){
+    		$.getJSON("http://localhost/endeavornoa/speakers.json",
+				function (data){
+					window.localStorage.setItem('speakers', JSON.stringify(data));
+					llenarSponsors(data);
+				}
+			).error(function() { onSpeakersError(); });
+    	}
+
+		function onSpeakersError(){
+    		var data = window.localStorage.getItem('speakers');
+    		if(data != null)
+    			llenarSponsors($.parseJSON(data));
+    		else{
+    			$.getJSON("json/speakers.json", 
+    				function(data){
+						llenarSpeakers(data)
+					}
+				);
+			}
+    	}
     
         $(function() {
         	
@@ -67,53 +111,20 @@
  		       		traerSponsors();
  		       		localStorage.setItem("resumeSponsors", "0");
  		       	}
-        	});
+        	});	
 
-			//Carga el tab Agenda
-        	$('#Agenda').live("pagecreate", function() {
-				$.getJSON("http://localhost/endeavornoa/agenda.json",
-					function (data){
-						window.localStorage.setItem('agenda', JSON.stringify(data));
-						llenarSponsors(data);
-					}
-				).error(function() { onAgendaError(); });
-			});
-			
-        	function onAgendaError(){
-        		var data = window.localStorage.getItem('agenda');
-        		if(data != null)
-        			llenarSponsors($.parseJSON(data));
-        		else{
-        			$.getJSON("json/agenda.json", 
-        				function(data){
-							llenarAgenda(data)
-						}
-					);
-				}
-        	}
-        	
-			//Carga el tab Speakers
-        	$('#speakers').live("pagecreate", function() {
-				$.getJSON("http://localhost/endeavornoa/speakers.json",
-					function (data){
-						window.localStorage.setItem('speakers', JSON.stringify(data));
-						llenarSponsors(data);
-					}
-				).error(function() { onSpeakersError(); });
-			});
-			
-        	function onSpeakersError(){
-        		var data = window.localStorage.getItem('speakers');
-        		if(data != null)
-        			llenarSponsors($.parseJSON(data));
-        		else{
-        			$.getJSON("json/speakers.json", 
-        				function(data){
-							llenarSpeakers(data)
-						}
-					);
-				}
-        	}
+			$('#Agenda').live("pagebeforeshow", function(){
+        		if(localStorage.getItem("resumeAgenda") == "1"){
+					traerAgenda();
+ 		       		localStorage.setItem("resumeAgenda", "0");
+ 		       	}
+        	});
+        	$('#speakers').live("pagebeforeshow", function(){
+        		if(localStorage.getItem("resumeSpeakers") == "1"){
+ 		       		traerSpeakers();
+ 		       		localStorage.setItem("resumeSpeakers", "0");
+ 		       	}
+        	});
         	
         	
 
