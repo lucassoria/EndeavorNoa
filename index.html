@@ -19,6 +19,13 @@
         
     <script type="text/javascript">
     
+    	var soapMessageC = '<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> \
+<SOAP-ENV:Body> \
+<Execute xmlns="EX2012"> \
+</Execute> \
+</SOAP-ENV:Body> \
+</SOAP-ENV:Envelope >';
+    
     	function onLoad(){
     		document.addEventListener("deviceready", onDeviceReady, false);
     		//banderas para saber si la aplicacion paso a background
@@ -39,15 +46,17 @@
     	}
     	
     	function traerSponsors(){
-    		$.getJSON("http://localhost/endeavornoa/sponsors.json",
-				function (data){
-					window.localStorage.setItem('sponsors', JSON.stringify(data));
-					llenarSponsors(data);
-				}
-			).error(function() { onSponsorsError(); });
+			$.ajax({
+				url: 'http://buhoonline.com/ex2012/servlet/awssponsors',
+				type: "POST",
+				datatype: 'xml',
+				data: soapMessageC,
+				complete: guardarSponsors,
+				failure: onSponsorsError
+			});
     	}
 			
-		function onSponsorsError(){
+		function onSponsorsError(error){
 			var data = window.localStorage.getItem('sponsors');
 			if(data != null)
 				llenarSponsors($.parseJSON(data));
@@ -60,19 +69,76 @@
 			}
 		}
 		
-		function traerAgenda(){
-    		$.getJSON("http://localhost/endeavornoa/agenda.json",
-				function (data){
-					window.localStorage.setItem('agenda', JSON.stringify(data));
-					llenarSponsors(data);
+		function guardarSponsors(data){
+			var sponsors = $(data.responseText).text();
+			window.localStorage.setItem('sponsors', sponsors);
+        	llenarSponsors($.parseJSON(sponsors));
+		}
+		
+		//Llena la lista de sponsors a traves de un json como parametro
+		function llenarSponsors(data){
+        	var $page = $("#Sponsors");
+        	$page.find(".content").empty();
+        	$page.find(".content").html("<ul></ul>");
+        	$lista = $page.find(".content ul");
+			var premiumCounter = 0;
+			var baseCounter = 0;
+			var juniorCounter = 0;
+			var strPremiunHtml = '<li data-role="list-divider"> Premium </li>';
+			var strBaseHtml = '<li data-role="list-divider"> Base </li>';
+			var strJuniorHtml = '<li data-role="list-divider"> Junior </li>';
+			var strHtml = "";
+			
+			$.each(data, function(key, val) {
+				strHtml = '<li data-icon="false"><a href="http://' + val.SponsorLink + '" target="_blank">' + ((val.imagen != "" && val.imagen)? '<img src="' + val.imagen + '">' : "") + '<h3> ' + val.SponsorNombre + ' </h3> ' + val.SponsorDescripcion + ' </a></li>';
+				switch(val.SponsorTipo){
+					case "PMN":
+						premiumCounter++;
+						strPremiunHtml += strHtml;
+						break;
+					case "BAS":
+						baseCounter++;
+						strBaseHtml += strHtml;
+						break;
+					case "JUN":
+						juniorCounter++;
+						strJuniorHtml += strHtml;
+						break;
 				}
-			).error(function() { onAgendaError(); });
+			});
+				
+			var item;
+			if(premiumCounter > 0){
+				item = $(strPremiunHtml);
+				$lista.append(item);
+			}
+			if(baseCounter > 0){
+				item = $(strBaseHtml);
+				$lista.append(item);
+			}
+			if(juniorCounter > 0){
+				item = $(strJuniorHtml);
+				$lista.append(item);
+			}
+			
+			$lista.listview();
+        }
+		
+		function traerAgenda(){
+			$.ajax({
+				url: 'http://buhoonline.com/ex2012/servlet/awsagenda',
+				type: "POST",
+				datatype: 'xml',
+				data: soapMessageC,
+				complete: guardarAgenda,
+				failure: onAgendaError
+			});
     	}
 
 		function onAgendaError(){
     		var data = window.localStorage.getItem('agenda');
     		if(data != null)
-    			llenarSponsors($.parseJSON(data));
+    			llenarAgenda($.parseJSON(data));
     		else{
     			$.getJSON("json/agenda.json", 
     				function(data){
@@ -81,126 +147,13 @@
 				);
 			}
     	}
-
-		function traerSpeakers(){
-    		$.getJSON("http://localhost/endeavornoa/speakers.json",
-				function (data){
-					window.localStorage.setItem('speakers', JSON.stringify(data));
-					llenarSponsors(data);
-				}
-			).error(function() { onSpeakersError(); });
-    	}
-
-		function onSpeakersError(){
-    		var data = window.localStorage.getItem('speakers');
-    		if(data != null)
-    			llenarSponsors($.parseJSON(data));
-    		else{
-    			$.getJSON("json/speakers.json", 
-    				function(data){
-						llenarSpeakers(data)
-					}
-				);
-			}
-    	}
-    
-        $(function() {
-        	
-        	$('#Sponsors').live("pagebeforeshow", function(){
-        		if(localStorage.getItem("resumeSponsors") == "1"){
- 		       		traerSponsors();
- 		       		localStorage.setItem("resumeSponsors", "0");
- 		       	}
-        	});	
-
-			$('#Agenda').live("pagebeforeshow", function(){
-        		if(localStorage.getItem("resumeAgenda") == "1"){
-					traerAgenda();
- 		       		localStorage.setItem("resumeAgenda", "0");
- 		       	}
-        	});
-        	$('#speakers').live("pagebeforeshow", function(){
-        		if(localStorage.getItem("resumeSpeakers") == "1"){
- 		       		traerSpeakers();
- 		       		localStorage.setItem("resumeSpeakers", "0");
- 		       	}
-        	});
-        	
-        	
-
-			$('#Donde').live("pageinit", function() {
-				var yourStartLatLng = '57.7973333,12.0502107';
-				
-				$('#map_canvas').gmap({'center': yourStartLatLng});
-					
-				$('#map_canvas').gmap().bind('init', function(ev, map) {
-					$('#map_canvas').gmap('option', 'zoom', 18);
-					$('#map_canvas').gmap('addMarker', {'position': '57.7975333,12.0502107'}).click(function() {
-						$('#map_canvas').gmap('openInfoWindow', {'content': 'Hello World!'}, this);
-					});
-				});
-				$('#map_canvas').gmap('refresh');
-			});
-	    });
-        
-		//Llena la lista de sponsors a traves de un json como parametro
-        function llenarSponsors(data){
-        	var $page = $("#Sponsors");
-        	
-        	$page.find(".content").empty();
-        	
-        	$page.find(".content").html("<ul></ul>");
-        	
-        	$lista = $page.find(".content ul");
-        	
-        	var items = [];
-			$.each(data, function(key, val) {
-				var strHtml = '<li data-role="list-divider"> ' + key + ' </li>';
-				var item = $(strHtml);
-				$lista.append(item);
-				
-				if(key == "Gold"){
-					$.each(val, function(key, val) {
-						strHtml = '<li data-icon="false"><a href="">' + ((val.imagen != "")? '<img src="' + val.imagen + '">' : "") + '<h3> ' + val.nombre + ' </h3></a></li>';
-						var item = $(strHtml);
-						$lista.append(item);
-					});
-				}
-				else{
-					$.each(val, function(key, val) {
-						strHtml = '<li data-icon="false"><a href="">' + ((val.imagen != "")? '<img src="' + val.imagen + '">' : "") + val.nombre + '</a></li>';
-						var item = $(strHtml);
-						$lista.append(item);
-					});
-				}
-			});
-			$lista.listview();
-        }
 		
-		//Llena la lista de speakers a traves de un json como parametro
-        function llenarSpeakers(data){
-        	var $page = $("#speakers");
-        	
-        	$page.find(".content").empty();
-        	
-        	$page.find(".content").html("<ul></ul>");
-        	
-        	$lista = $page.find(".content ul");
-        	
-        	$lista.attr("data-autodividers", "true");
-			$.each(data, function(key, val) {
-				strHtml = '<li><a href="#detalleSpeaker"><img src="'+val.imagen+'"/><h1><strong>'+val.nombre+'</strong></h1><p>'+val.puesto+'</p></a></li>';
-				$lista.append($(strHtml));
-				$lista.find("a:last").jqmData("speaker",JSON.stringify(val));
-			});
-			$lista.listview();
-			$lista.find('a').click(
-				function(){
-					var $this = $(this);
-					$("#detalleSpeaker").jqmData("speaker",$this.jqmData("speaker"));
-				}
-			);
-        }
+		function guardarAgenda(data){
+			var agenda = $(data.responseText).text();
+			window.localStorage.setItem('agenda', agenda);
+        	llenarAgenda($.parseJSON(agenda));
+		}
+		
 		//Llena la lista de charlas a traves de un json como parametro
 		function llenarAgenda(data){
         	var $page = $("#Agenda");
@@ -231,6 +184,100 @@
 				$("#detalleCharla").jqmData("agenda",$this.jqmData("agenda"));
 			});
         }
+
+		function traerSpeakers(){
+			$.ajax({
+				url: 'http://buhoonline.com/ex2012/servlet/awsspeakers',
+				type: "POST",
+				datatype: 'xml',
+				data: soapMessageC,
+				complete: guardarSpeakers,
+				failure: onSpeakersError
+			});
+    	}
+
+		function onSpeakersError(){
+    		var data = window.localStorage.getItem('speakers');
+    		if(data != null)
+    			llenarSpeakers($.parseJSON(data));
+    		else{
+    			$.getJSON("json/speakers.json", 
+    				function(data){
+						llenarSpeakers(data)
+					}
+				);
+			}
+    	}
+		
+		function guardarSpeakers(data){
+			var speakers = $(data.responseText).text();
+			window.localStorage.setItem('speakers', speakers);
+        	llenarSpeakers($.parseJSON(speakers));
+		}
+    	
+    	//Llena la lista de speakers a traves de un json como parametro
+        function llenarSpeakers(data){
+        	var $page = $("#speakers");
+        	$page.find(".content").empty();
+        	$page.find(".content").html("<ul></ul>");
+        	$lista = $page.find(".content ul");
+			$lista.attr("data-autodividers", "true");
+			$.each(data, function(key, val) {
+				strHtml = '<li><a href="#detalleSpeaker">' + ((val.imagen != "" && val.imagen)? '<img src="'+val.imagen+'"/>' : "") + '<h1><strong>'+val.SpeakerNombre+'</strong></h1><p>'+val.SpeakerAbstract+'</p></a></li>';
+				$lista.append($(strHtml));
+				$lista.find("a:last").jqmData("speaker",JSON.stringify(val));
+			});
+			$lista.listview();
+			$lista.find('a').click(
+				function(){
+					var $this = $(this);
+					$("#detalleSpeaker").jqmData("speaker",$this.jqmData("speaker"));
+				}
+			);
+        }
+    
+        $(function() {
+        	$('#Sponsors').live("pagebeforeshow", function(){
+        		if(localStorage.getItem("resumeSponsors") == "1"){
+ 		       		traerSponsors();
+ 		       		localStorage.setItem("resumeSponsors", "0");
+ 		       	}
+        	});	
+
+			$('#Agenda').live("pagebeforeshow", function(){
+        		if(localStorage.getItem("resumeAgenda") == "1"){
+					traerAgenda();
+ 		       		localStorage.setItem("resumeAgenda", "0");
+ 		       	}
+        	});
+        	
+        	$('#speakers').live("pagebeforeshow", function(){
+        		if(localStorage.getItem("resumeSpeakers") == "1"){
+ 		       		traerSpeakers();
+ 		       		localStorage.setItem("resumeSpeakers", "0");
+ 		       	}
+        	});
+
+			$('#Donde').live("pageinit", function() {
+				var yourStartLatLng = '57.7973333,12.0502107';
+
+				$('#map_canvas').gmap({'center': yourStartLatLng});
+
+				$('#map_canvas').gmap().bind('init', function(ev, map) {
+					$('#map_canvas').gmap('option', 'zoom', 18);
+					$('#map_canvas').gmap('addMarker', {'position': '57.7975333,12.0502107'}).click(function() {
+						$('#map_canvas').gmap('openInfoWindow', {'content': 'Hello World!'}, this);
+					});
+				});
+				$('#map_canvas').gmap('refresh');
+			});
+	    });
+        
+        
+
+		
+
+		
       
 		//Llena llena los tweets
        	$(document).ready(function(){
@@ -336,7 +383,7 @@
 					$page.find("div[data-role='header'] h1").remove();
 					$page.find("div[data-role='header']").append('<h1 class="ui-title" role="heading" aria-level="1">SPEAKER</h1>');
 					$page.find(".content").empty();
-					strHtml = '<div style="display:block;padding:1em .8em;margin:0"><div style="float:left;margin-right:10px;"><img src="'+data.imagen+'"></div><div style="background-image:-webkit-linear-gradient(top,white,#FBFBFB 3%,#E1E1E1);padding:0.5em"><h4>'+data.nombre+'</h4><p>'+data.puesto+'</p></div></div><div style="padding:1em 0.8em;clear:both"><p>Biografia del speaker</p><p>'+data.bio+'</p></div>';
+					strHtml = '<div style="display:block;padding:1em .8em;margin:0"><div style="float:left;margin-right:10px;">' + ((data.imagen != "" && data.imagen)? '<img src="'+data.imagen+'"/>' : "") + '</div><div style="background-image:-webkit-linear-gradient(top,white,#FBFBFB 3%,#E1E1E1);padding:0.5em"><h4>'+data.SpeakerNombre+'</h4><p>'+data.SpeakerAbstract+'</p></div></div><div style="padding:1em 0.8em;clear:both"><p>Biografia del speaker</p><p>'+data.SpeakerCurriculum+'</p></div>';
 					$page.find(".content").append(strHtml);
 					
 				}
