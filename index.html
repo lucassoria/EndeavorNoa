@@ -16,6 +16,7 @@
     <script type="text/javascript" src="jtweetsanywhere/jquery.jtweetsanywhere-1.3.1.min.js"></script>
     <script type="text/javascript" src="jtweetsanywhere/jtweetsanywhere-de-1.3.1.min.js"></script>
     <link rel="stylesheet" type="text/css" href="jtweetsanywhere/jquery.jtweetsanywhere-1.3.1.css" />
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
         
     <script type="text/javascript">
     
@@ -90,17 +91,17 @@
 			var strHtml = "";
 			
 			$.each(data, function(key, val) {
-				strHtml = '<li data-icon="false"><a href="http://' + val.SponsorLink + '" target="_blank">' + ((val.imagen != "" && val.imagen)? '<img src="' + val.imagen + '">' : "") + '<h3> ' + val.SponsorNombre + ' </h3> ' + val.SponsorDescripcion + ' </a></li>';
-				switch(val.SponsorTipo){
-					case "PMN":
+				strHtml = '<li data-icon="false"><a href="http://' + val.Link + '" target="_blank">' + ((val.Imagen != "" && val.Imagen)? '<img src="data:image/jpg;base64,'+val.Imagen+'"/>' : "") + '<h3> ' + val.Nombre + ' </h3> ' + val.Descripcion + ' </a></li>';
+				switch(val.Tipo.replace(/^\s\s*/, '').replace(/\s\s*$/, '')){
+					case "Premium":
 						premiumCounter++;
 						strPremiunHtml += strHtml;
 						break;
-					case "BAS":
+					case "Base":
 						baseCounter++;
 						strBaseHtml += strHtml;
 						break;
-					case "JUN":
+					case "Junior":
 						juniorCounter++;
 						strJuniorHtml += strHtml;
 						break;
@@ -157,26 +158,24 @@
 		//Llena la lista de charlas a traves de un json como parametro
 		function llenarAgenda(data){
         	var $page = $("#Agenda");
-        	
         	$page.find(".content").empty();
-        	
         	$page.find(".content").html("<ul></ul>");
-        	
         	$lista = $page.find(".content ul");
         	$lista.attr("data-filter","true");
 			$lista.attr("data-role","listview");
-			$lista.attr("id","testlist" );
+			//$lista.attr("id","testlist" );
         	var items = [];
 			$.each(data, function(key, val) {
-				var strHtml = '<li data-role="list-divider"> ' + key + ' </li>';
+				var date = new Date(Date.parse(val.Fecha))
+				var strHtml = '<li data-role="list-divider"> ' + date.toLocaleString().replace(" ART", '') + ' </li>';
+				//var item = $(strHtml);
+				//$lista.append(item);
+				//$.each(val, function(key, val) {
+				strHtml += '<li data-filtertext='+val.Grupo+'><a href="#detalleCharla"><p><strong>'+val.Grupo+'</strong></p><h1><strong>'+val.Titulo+'</strong></h1><p>'+val.Descripcion+'</p></a></li>'; 
 				var item = $(strHtml);
 				$lista.append(item);
-				$.each(val, function(key, val) {
-					strHtml = '<li data-filtertext='+val.grupo+'><a href="#detalleCharla"><p><strong>'+val.grupo+'</strong></p><h1><strong>'+val.titulo+'</strong></h1><p>'+val.descripcion+'</p></a></li>'; 
-					var item = $(strHtml);
-					$lista.append(item);
-					$lista.find("a:last").jqmData("agenda",JSON.stringify(val));
-				});
+				$lista.find("a:last").jqmData("agenda",JSON.stringify(val));
+				//});
 			});
 			$lista.listview();
 			$lista.find('a').click(function(){
@@ -223,7 +222,7 @@
         	$lista = $page.find(".content ul");
 			$lista.attr("data-autodividers", "true");
 			$.each(data, function(key, val) {
-				strHtml = '<li><a href="#detalleSpeaker">' + ((val.imagen != "" && val.imagen)? '<img src="'+val.imagen+'"/>' : "") + '<h1><strong>'+val.SpeakerNombre+'</strong></h1><p>'+val.SpeakerAbstract+'</p></a></li>';
+				strHtml = '<li><a href="#detalleSpeaker">' + ((val.Imagen != "" && val.Imagen)? '<img src="data:image/jpg;base64,'+val.Imagen+'"/>' : "") + '<h1><strong>'+val.Nombre+'</strong></h1><p>'+val.Puesto+'</p></a></li>';
 				$lista.append($(strHtml));
 				$lista.find("a:last").jqmData("speaker",JSON.stringify(val));
 			});
@@ -258,7 +257,7 @@
  		       	}
         	});
 
-			$('#Donde').live("pageinit", function() {
+			$('#Donde').live("pageshow", function() {
 				var yourStartLatLng = '57.7973333,12.0502107';
 
 				$('#map_canvas').gmap({'center': yourStartLatLng});
@@ -272,12 +271,6 @@
 				$('#map_canvas').gmap('refresh');
 			});
 	    });
-        
-        
-
-		
-
-		
       
 		//Llena llena los tweets
        	$(document).ready(function(){
@@ -315,8 +308,9 @@
 			var clicked1 = "false";
 			
 			$("#filterBar").delegate("a", "click", function () {
-				if ($(this).text().toString() != "Todos"){
-					$("div.ui-input-search").find("input").val($(this).text());
+				var idAttr = $(this).attr('id');
+				if ($(this).attr('id') != "Todos"){
+					$("div.ui-input-search").find("input").val(idAttr);
 					$("div.ui-input-search").find("input").keyup();
 				}
 				else{
@@ -342,15 +336,15 @@
 					var $page = $('#detalleCharla');
 					var data = $.parseJSON($page.jqmData("agenda"));
 					$page.find("div[data-role='header'] h1").remove();
-					$page.find("div[data-role='header']").append('<h1 class="ui-title" role="heading" aria-level="1">' + data.titulo + '</h1>');
+					$page.find("div[data-role='header']").append('<h1 class="ui-title" role="heading" aria-level="1">' + data.Titulo + '</h1>');
 					$page.find(".content").empty();
-					$page.find(".content").html("<h4>"+data.descripcion+"</h4><p>"+data.contenido+"</p>");
-					if(data.speakers){
+					$page.find(".content").html("<h4>"+data.Descripcion+"</h4><p>"+data.Contenido+"</p><p>Salon: "+data.Salon+"</p>");
+					if(data.Speakers){
 						$page.find(".content").append($("<ul></ul>"));
 						$lista=$page.find(".content ul");
 						$lista.append($('<li data-role="list-divider"> SPEAKERS </li>'));		
-						$.each(data.speakers, function(key, val){
-							strHtml = '<li><a href="#detalleSpeaker"><img src="'+val.imagen+'"/><h1><strong>'+val.nombre+'</strong></h1><p>'+val.puesto+'</p></a></li>';
+						$.each(data.Speakers, function(key, val){
+							strHtml = '<li><a href="#detalleSpeaker">' + ((val.Imagen != "" && val.Imagen)? '<img src="data:image/jpg;base64,'+val.Imagen+'"/>' : "") + '<h1><strong>'+val.Nombre+'</strong></h1><p>'+val.Puesto+'</p></a></li>';
 							$lista.append($(strHtml));
 							$lista.find("a:last").jqmData("speaker",JSON.stringify(val));
 						});
@@ -383,12 +377,42 @@
 					$page.find("div[data-role='header'] h1").remove();
 					$page.find("div[data-role='header']").append('<h1 class="ui-title" role="heading" aria-level="1">SPEAKER</h1>');
 					$page.find(".content").empty();
-					strHtml = '<div style="display:block;padding:1em .8em;margin:0"><div style="float:left;margin-right:10px;">' + ((data.imagen != "" && data.imagen)? '<img src="'+data.imagen+'"/>' : "") + '</div><div style="background-image:-webkit-linear-gradient(top,white,#FBFBFB 3%,#E1E1E1);padding:0.5em"><h4>'+data.SpeakerNombre+'</h4><p>'+data.SpeakerAbstract+'</p></div></div><div style="padding:1em 0.8em;clear:both"><p>Biografia del speaker</p><p>'+data.SpeakerCurriculum+'</p></div>';
+					strHtml = '<div style="display:block;padding:1em .8em;margin:0"><div style="float:left;margin-right:10px;">' + ((data.Imagen != "" && data.Imagen)? '<img style="display: inline" src="data:image/jpg;base64,'+data.Imagen+'"/>' : "") + '</div><div style="background-image:-webkit-linear-gradient(top,white,#FBFBFB 3%,#E1E1E1);padding:0.5em"><h4>'+data.Nombre+'</h4><p>'+data.Puesto+'</p></div></div><div style="padding:1em 0.8em;clear:both"><p>Biografia del speaker</p><p>'+data.Curriculum+'</p></div>';
 					$page.find(".content").append(strHtml);
 					
 				}
 			);
         });
+        
+        
+        function permutarimagen1() {
+                $("#idTalk").attr("src","img/talksOn.png");
+                $("#idNetwork").attr("src", "img/networkOff.png");
+                $("#idAcademia").attr("src", "img/academiaOff.png");
+                $("#idPointTodos").fadeOut();
+        }
+
+        function permutarimagen2() {
+                $("#idTalk").attr("src","img/talksOff.png");
+                $("#idAcademia").attr("src", "img/academiaOn.png");
+                $("#idNetwork").attr("src", "img/networkOff.png"); 
+                $("#idPointTodos").fadeOut();
+        }
+
+        function permutarimagen3() {
+                $("#idTalk").attr("src","img/talksOff.png")                
+                $("#idAcademia").attr("src", "img/academiaOff.png");
+                $("#idNetwork").attr("src", "img/networkOn.png");
+                $("#idPointTodos").fadeOut();
+        }
+
+        function desactivarTab(){
+    
+            $("#idNetwork").attr("src", "img/networkOff.png");
+            $("#idAcademia").attr("src", "img/academiaOff.png");
+            $("#idTalk").attr("src","img/talksOff.png");
+            $("#idPointTodos").fadeIn();
+        }
 		
     </script>
 
@@ -410,61 +434,354 @@
             padding: 0;
             text-shadow: none;
         }
-    </style>
+        .ui-btn-up-f {
+                background: -moz-linear-gradient(top, rgba(57,107,158,1) 0%, rgba(78,137,197,0.65) 100%); /* FF3.6+ */
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(57,107,158,1)), color-stop(100%,rgba(78,137,197,0.65))); /* Chrome,Safari4+ */
+                background: -webkit-linear-gradient(top, rgba(57,107,158,1) 0%,rgba(78,137,197,0.65) 100%); /* Chrome10+,Safari5.1+ */
+                background: -o-linear-gradient(top, rgba(57,107,158,1) 0%,rgba(78,137,197,0.65) 100%); /* Opera11.10+ */
+                background: -ms-linear-gradient(top, rgba(57,107,158,1) 0%,rgba(78,137,197,0.65) 100%); /* IE10+ */
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#396b9e', endColorstr='#a64e89c5',GradientType=0 ); /* IE6-9 */
+                background: linear-gradient(top, rgba(57,107,158,1) 0%,rgba(78,137,197,0.65) 100%); /* W3C */
+                border: 1px solid #225377;
+                text-shadow: #225377 0px -1px 1px;
+                color: #fff;
+                }
+            .ui-btn-down-f, 
+            .ui-btn-hover-f {
+                background: #f85032; /* Old browsers */
+                background: -moz-linear-gradient(top,  #f85032 0%, #f16f5c 33%, #f6290c 51%, #f02f17 71%, #e73827 100%); /* FF3.6+ */
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f85032), color-stop(33%,#f16f5c), color-stop(51%,#f6290c), color-stop(71%,#f02f17), color-stop(100%,#e73827)); /* Chrome,Safari4+ */
+                background: -webkit-linear-gradient(top,  #f85032 0%,#f16f5c 33%,#f6290c 51%,#f02f17 71%,#e73827 100%); /* Chrome10+,Safari5.1+ */
+                background: -o-linear-gradient(top,  #f85032 0%,#f16f5c 33%,#f6290c 51%,#f02f17 71%,#e73827 100%); /* Opera 11.10+ */
+                background: -ms-linear-gradient(top,  #f85032 0%,#f16f5c 33%,#f6290c 51%,#f02f17 71%,#e73827 100%); /* IE10+ */
+                background: linear-gradient(to bottom,  #f85032 0%,#f16f5c 33%,#f6290c 51%,#f02f17 71%,#e73827 100%); /* W3C */
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f85032', endColorstr='#e73827',GradientType=0 ); /* IE6-9 */
+                }
+
+                .ui-bar-b{
+                    background: #CC2D8F !important;
+                }  
+
+                .ui-bar-a {
+                   background: #CC2D8F !important;
+                }     
+                
+                @font-face {
+                font-family: 'blok-italic';
+                src: url('assets/fonts/Blokletters-Balpen.eot');
+                src: local('Blokletters Balpen Balpen'), 
+                local('Blokletters-Balpen'),                 
+                url('assets/fonts/berthold2.ttf') format('truetype');
+                }
+                
+                @font-face {
+                font-family: 'blok-italic-bold';
+                src: url('assets/fonts/Blokletters-Balpen.eot');
+                src: local('Blokletters Balpen Balpen'), 
+                local('Blokletters-Balpen'),                 
+                url('assets/fonts/berthold3.ttf') format('truetype');
+                }
+
+/*                @font-face {
+                font-family: 'blok-italic';
+                src: url('assets/fonts/Blokletters-Balpen.eot');
+                src: local('Blokletters Balpen Balpen'), 
+                local('Blokletters-Balpen'),                 
+                url('assets/fonts/Blokletters-Balpen.ttf') format('truetype');
+                }                
+*/
+                
+            .ui-header .ui-btn-inner, .ui-footer .ui-btn-inner, .ui-mini .ui-btn-inner {
+                font-size: 25px;
+                margin: 0px;
+                /*font-weight:bold;*/
+                                
+                }   
+
+/***************************************#idNavBar*********************************************/
+            /*.ui-navbar a.ui-btn{ */
+                /*Azul*/
+                #idNavBar a.ui-btn{
+                font-family: blok-italic;                            
+                background-image: url("img/recorteAzul.png");
+                background-repeat:repeat-x;
+                /*color: #D528C9;*/                
+                /*color: #CB4096;*/
+                /*color: #CC2D8F;*/
+                color: #AD3887;
+                height: 60px;
+                }
+
+                /*Rosado*/
+                #idNavBar a.ui-btn.ui-btn-active{
+                background-image: url("img/recorteRosa.png");
+                background-repeat:repeat-x;
+                color: #FFFFFF;                 
+                /*color: #CB4096;*/
+                /*color: #CC2D8F;*/
+                }
+/***************************************#idFilterNavBar*********************************************/
+                /*Azul*/
+                .idFilterNavBar a.ui-btn{
+                /*margin-left: -10px;                */
+                font-family: blok-italic;
+                font-weight:bold;                
+                background-image: url("img/recorteAzul.png");
+                background-repeat:repeat-x;
+                /*color: #D528C9;                   con height de tab de 80px*/
+                /*color: #CC2D8F;*/
+                color: #AD3887;
+                height: 60px;                
+                }
+
+                /*Rosado*/
+                .idFilterNavBar a.ui-btn.ui-btn-active{
+                /*background-image: url("img/recorteRosa.png");
+                background-repeat:repeat-x; */
+                color: #FFFFFF;             
+                }
+                
+
+            #idAgenda {
+                position: relative;
+                top:0px;
+                /*left:-10px;                */
+                left:0px;                
+            }       
+
+            #imgExp1{
+
+                min-height: 40px;
+                min-width: 80px;
+                max-height: 80px;
+                max-width: 160px;
+ 
+                /* Escalamiento proporcional */
+                width: auto;
+                height: auto;
+                float:left;
+                margin-left: -11px;
+ 
+                /* Posicionamiento */
+                position: relative;
+                top: -17px;
+                left: 0px;
+            }
+            #imgExp2{
+
+                min-height: 40px;
+                min-width: 80px;
+                max-height: 80px;
+                max-width: 160px;
+ 
+                /* Escalamiento proporcional */
+                width: auto;
+                height: auto;
+                float:left;
+                margin-left: -11px;
+ 
+                /* Posicionamiento */
+                position: relative;
+                top: -17px;
+                left: 0px;
+            }            
+
+            #idPoint{                                                
+                position: relative;
+                top: 10px;
+                left: -30px;
+            }
+
+            #idPointN{                                                        
+                top: -17px;
+                position: relative;
+                width: auto;                
+                height: auto;
+                float: left;
+                /*margin-top: -2px;  */
+            }  
+
+            #idPointTodos{
+                top: -17px;
+                position: relative;
+                width: auto;                
+                height: auto;
+                float: left;
+            }
+
+            #idEsquina1{
+                position: relative;
+                top:-17px;                  
+                width: auto;
+                height: auto;
+                float: right;
+                margin-right: -10px;
+                
+            }
+
+            #idEsquina2{
+                position: relative;
+                top:-17px;                  
+                width: auto;
+                height: auto;
+                float: right;
+                margin-right: -10px;
+                
+            }
+
+            #idEsquina3{
+                position: relative;
+                top:-17px;                  
+                width: auto;
+                height: auto;
+                float: right;
+                margin-right: -6px;
+                
+            }
+
+            #idTalk{
+                position: relative;
+                /*left: 10%;*/
+                top: -20px;
+                min-height: 40px;
+                min-width: 80px;
+                max-height: 80px;
+                max-width: 160px;
+                width: 89px;
+                height: 60px;
+                float:right;
+                margin-right: -10px;
+            }            
+
+            #idAcademia{
+                position: relative;
+                /*left: 10%;*/
+                top: -20px;
+                min-height: 40px;
+                min-width: 40px;
+                max-height: 60px;
+                max-width: 89px;
+                width: 89px;
+                height: 60;
+                float:right;
+                margin-right: -10px;
+            }
+
+            #idNetwork{
+                position: relative;
+                /*left: 10%;*/
+                top: -20px;
+                width: 89px;
+                height: 60px;
+                float:right;    
+                margin-right: -10px;
+            }
+            /*.splash{
+                position: relative;
+                width: 100%;
+            }
+
+            #idSplash{                                
+                width: 100% !important;        
+            }*/
+}
+                /*AC2678*/
+    </style>   
     
 </head>
 <body onload="onLoad()">
     <div data-role="page" id="XE2012">
         <div data-role="header" data-id="headerBar" data-position="fixed" data-theme="a">
-            <div data-role="navbar">
+            <div data-role="navbar" data-iconpos="bottom" id="idNavBar">
                 <ul>
-                    <li><a href="#XE2012" class="ui-btn-active ui-state-persist">XE2012</a></li>
-                    <li><a href="#Agenda">Agenda</a></li>
-                    <li><a href="#Tweets">Tweets</a></li>
-                    <li><a href="#speakers">Speakers</a></li>
+                    <li><a href="#XE2012" class="ui-btn-active ui-state-persist">
+                            <img id="imgExp1" src="img/LOGO2.png" width="80%">                            
+                        </a>
+                    </li>
+                    <li>
+                        <a id="idTab" href="#Agenda" id="Agenda">Agenda                         
+                        </a>
+                    </li>
+                    <li><a id="idTab" href="#Tweets" id="Tweets">Tweets                    
+                        </a>
+                    </li>
+                    <li><a id="idTab" href="#speakers" id="Speakers">Speakers                        
+                        </a>
+                    </li>
                 </ul>
             </div>
-            
-            <div data-role="navbar">
+            <div data-role="navbar" class="idFilterNavBar">
                 <ul>
-                    <li><a href="#XE2012" class="ui-btn-active ui-state-persist"  data-theme="c">Que</a></li>
-                    <li><a href="#Donde" data-theme="c">Donde</a></li>
-                    <li><a href="#Sponsors" data-theme="c">Sponsors</a></li>
+                    <li><a href="#XE2012" class="ui-btn-active ui-state-persist">
+                            <img src="img/pointN.png" id="idPointN">                               
+                            Que es?
+                            <img src="img/esquinaT.png" id="idEsquina1">   
+                        </a>
+                    </li>
+                    <li><a href="#Donde">Donde</a></li>
+                    <li><a href="#Sponsors">Sponsors</a></li>
                 </ul>
-            </div>
-            
+            </div>            
         </div>
         <div data-role="content">
+            <!-- <div id="idContainer1">                            
+                <img src="img/e.png" id="idE">               
+            </div>
+            <div id="idContainer2">
+            <img src="img/barra.png" id="idBarra">               
+            </div>
+            <div id="idContainer3">                            
+            <img src="img/noa.png" id="idNoa">                           
+            </div> -->
+            <div id="lineaEN" >
+                <img src="img/e.png" id="idE">   
+                <img src="img/barra.png" id="imgMedio" >
+                <img src="img/noa.png" >    
+            </div>
             <p>Que content</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum posuere sollicitudin nunc. Ut rutrum tempor bibendum. In in nibh tellus, at imperdiet elit. Phasellus pretium, quam sit amet pretium rhoncus, justo eros luctus erat, nec sagittis tortor velit at metus. Cras vitae orci augue, at adipiscing diam. Phasellus accumsan placerat nulla, in facilisis odio commodo sed. Pellentesque porta turpis sit amet mauris laoreet ut placerat urna adipiscing. Morbi diam turpis, accumsan eget dignissim et, blandit non ligula. Curabitur laoreet suscipit arcu non porttitor. Aliquam quis lacinia tortor.
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum posuere sollicitudin nunc. Ut rutrum tempor bibendum. In in nibh tellus, at imperdiet elit. Phasellus pretium, quam sit amet pretium rhoncus, justo  º luctus erat, nec sagittis tortor velit at metus. Cras vitae orci augue, at adipiscing diam. Phasellus accumsan placerat nulla, in facilisis odio commodo sed. Pellentesque porta turpis sit amet mauris laoreet ut placerat urna adipiscing. Morbi diam turpis, accumsan eget dignissim et, blandit non ligula. Curabitur laoreet suscipit arcu non porttitor. Aliquam quis lacinia tortor.
 
-Curabitur pulvinar nibh id elit dictum feugiat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Suspendisse faucibus auctor massa et suscipit. Aliquam id pulvinar ligula. Vestibulum rutrum, dui quis rhoncus euismod, ligula eros pretium est, non placerat felis diam id mi. Fusce ac eros risus. Sed vestibulum leo risus.
+            Curabitur pulvinar nibh id elit dictum feugiat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Suspendisse faucibus auctor massa et suscipit. Aliquam id pulvinar ligula. Vestibulum rutrum, dui quis rhoncus euismod, ligula eros pretium est, non placerat felis diam id mi. Fusce ac eros risus. Sed vestibulum leo risus.
 
-Morbi sit amet orci mi, eget cursus quam. In hac habitasse platea dictumst. Ut imperdiet consectetur est, vel porttitor nisl congue quis. Vivamus ut enim arcu, eget lacinia purus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Suspendisse commodo quam et orci rutrum congue. Curabitur condimentum feugiat enim, quis auctor velit adipiscing eget. Sed mattis ornare consequat.
+            Morbi sit amet orci mi, eget cursus quam. In hac habitasse platea dictumst. Ut imperdiet consectetur est, vel porttitor nisl congue quis. Vivamus ut enim arcu, eget lacinia purus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Suspendisse commodo quam et orci rutrum congue. Curabitur condimentum feugiat enim, quis auctor velit adipiscing eget. Sed mattis ornare consequat.
 
-Proin blandit dui ac lacus iaculis eget semper quam sagittis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Etiam ut justo a purus semper tempor. Etiam a molestie orci. Ut posuere tristique leo, non varius eros mattis at. Maecenas justo sapien, rutrum nec ultrices at, luctus a quam. Aenean vehicula semper gravida. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aenean eget sem magna, id mollis nulla. Sed sodales elementum arcu, id hendrerit magna ullamcorper ac. In bibendum commodo auctor. Sed libero quam, commodo vitae sodales id, tempor sit amet nulla. Vivamus nisi mi, lacinia a consequat ac, aliquam eu elit. Proin pharetra justo id libero pellentesque aliquet vitae et eros. Quisque sed nisl in enim rhoncus cursus.
+            Proin blandit dui ac lacus iaculis eget semper quam sagittis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Etiam ut justo a purus semper tempor. Etiam a molestie orci. Ut posuere tristique leo, non varius eros mattis at. Maecenas justo sapien, rutrum nec ultrices at, luctus a quam. Aenean vehicula semper gravida. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aenean eget sem magna, id mollis nulla. Sed sodales elementum arcu, id hendrerit magna ullamcorper ac. In bibendum commodo auctor. Sed libero quam, commodo vitae sodales id, tempor sit amet nulla. Vivamus nisi mi, lacinia a consequat ac, aliquam eu elit. Proin pharetra justo id libero pellentesque aliquet vitae et eros. Quisque sed nisl in enim rhoncus cursus.
 
-Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce in orci a justo facilisis consectetur in id odio. Nulla a ultricies massa. Proin id est a lacus rhoncus cursus et et mi. Sed cursus, eros vitae venenatis adipiscing, nibh dui adipiscing magna, non vulputate dui lacus ac arcu. Mauris ac ipsum ac magna sollicitudin rutrum eget vitae dui.</p>
+            Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce in orci a justo facilisis consectetur in id odio. Nulla a ultricies massa. Proin id est a lacus rhoncus cursus et et mi. Sed cursus, eros vitae venenatis adipiscing, nibh dui adipiscing magna, non vulputate dui lacus ac arcu. Mauris ac ipsum ac magna sollicitudin rutrum eget vitae dui.</p>                
         </div>
     </div>
     
     <!-- DONDE -->
     <div data-role="page" id="Donde" class="details-page">
         <div data-role="header" data-id="headerBar" data-position="fixed" data-theme="a">
-            <div data-role="navbar">
+            <div data-role="navbar" id="idNavBar">
                 <ul>
-                    <li><a href="#XE2012" class="ui-btn-active ui-state-persist">XE2012</a></li>
-                    <li><a href="#Agenda">Agenda</a></li>
-                    <li><a href="#Tweets">Tweets</a></li>
-                    <li><a href="#speakers">Speakers</a></li>
+                    <li><a href="#XE2012" class="ui-btn-active ui-state-persist">
+                        <img src="img/LOGO2.png" id="imgExp2" width="60%">
+                        </a>
+                    </li>
+                    <li><a href="#Agenda">Agenda                        
+                        </a>
+                    </li>
+                    <li><a href="#Tweets">Tweets                        
+                        </a>
+                    </li>
+                    <li><a href="#speakers">Speakers                        
+                        </a>
+                    </li>
                 </ul>
             </div>
             
-            <div data-role="navbar">
+            <div data-role="navbar" class="idFilterNavBar">
                 <ul>
-                    <li><a href="#XE2012" data-theme="c">Que</a></li>
-                    <li><a href="#Donde" class="ui-btn-active ui-state-persist" data-theme="c">Donde</a></li>
-                    <li><a href="#Sponsors" data-theme="c">Sponsors</a></li>
+                    <li><a href="#XE2012">Que es?</a></li>
+                    <li><a href="#Donde" class="ui-btn-active ui-state-persist">
+                        <img src="img/pointN.png" id="idPointN">   
+                            Donde
+                        <img src="img/esquinaT.png" id="idEsquina2">   
+                        </a>
+                    </li>
+                    <li><a href="#Sponsors">Sponsors</a></li>
                 </ul>
             </div>
         </div>
@@ -481,21 +798,36 @@ Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce 
     
     <!-- Sponsors -->
     <div data-role="page" id="Sponsors">
-        <div data-role="header" data-id="headerBar" data-position="fixed" data-theme="a">
-            <div data-role="navbar">
+        <div data-role="header" data-id="headerBar" data-position="fixed">
+            <div data-role="navbar" id="idNavBar">
                 <ul>
-                    <li><a href="#XE2012" class="ui-btn-active ui-state-persist">XE2012</a></li>
-                    <li><a href="#Agenda">Agenda</a></li>
-                    <li><a href="#Tweets">Tweets</a></li>
-                    <li><a href="#speakers">Speakers</a></li>
+                    <li><a href="#XE2012" class="ui-btn-active ui-state-persist"><img src="img/LOGO2.png" id="imgExp2" width="60%"></a></li>
+                    <li><a href="#Agenda">Agenda
+                        </a>
+                    </li>
+                    <li><a href="#Tweets">Tweets                        
+                        </a>
+                    </li>
+                    <li><a href="#speakers">Speakers                        
+                        </a>
+                    </li>
                 </ul>
             </div>
             
-            <div data-role="navbar">
+            <div data-role="navbar" class="idFilterNavBar">
                 <ul>
-                    <li><a href="#XE2012" data-theme="c">Que</a></li>
-                    <li><a href="#Donde" data-theme="c">Donde</a></li>
-                    <li><a href="#Sponsors" class="ui-btn-active ui-state-persist" data-theme="c">Sponsors</a></li>
+                    <li><a href="#XE2012">Que es?                        
+                        </a>
+                    </li>
+                    <li><a href="#Donde">Donde
+                        </a>
+                    </li>
+                    <li><a href="#Sponsors" class="ui-btn-active ui-state-persist">
+                            <img src="img/pointN.png" id="idPointN">   
+                            Sponsors
+                            <img src="img/esquinaT.png" id="idEsquina3">   
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -506,17 +838,23 @@ Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce 
     <!-- Tweets -->
     <div data-role="page" id="Tweets">
         <div data-role="header" data-id="headerBar" data-position="fixed" data-theme="a">
-            <div data-role="navbar">
+            <div data-role="navbar" id="idNavBar">
                 <ul>
-                    <li><a href="#XE2012">XE2012</a></li>
-                    <li><a href="#Agenda">Agenda</a></li>
-                    <li><a href="#Tweets" class="ui-btn-active ui-state-persist">Tweets</a></li>
-                    <li><a href="#speakers">Speakers</a></li>
+                    <li><a href="#XE2012"><img src="img/LOGO1.png" id="imgExp2" width="60%"></a></li>
+                    <li><a href="#Agenda">Agenda</a>
+                    </li>
+                    <li><a href="#Tweets" class="ui-btn-active ui-state-persist">
+                            <img src="img/pointN.png" id="idPointN">                           
+                            Tweets
+                        </a>
+                    </li>
+                    <li><a href="#speakers">Speakers</a>
+                    </li>
                 </ul>
             </div>
         </div>
 		<div data-role="content">
-			<p>Tweets</p>
+			<p>Tweets #XENOA2012</p>
 			<div id="tweetFeed">
 			</div>
 		</div>
@@ -524,25 +862,44 @@ Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce 
 	<!-- Agenda-->
 	<div data-role="page" id="Agenda">
         <div data-role="header" data-id="headerBar" data-position="fixed" data-theme="a">
-            <div data-role="navbar">
+            <div data-role="navbar" id="idNavBar" onclick="desactivarTab();">
                 <ul>
-                    <li><a href="#XE2012">XE2012</a></li>
-                    <li><a href="#Agenda" class="ui-btn-active ui-state-persist">Agenda</a></li>
+                    <li><a href="#XE2012"><img src="img/LOGO1.png" id="imgExp2" width="60%"></a></li>
+                    <li><a href="#Agenda" class="ui-btn-active ui-state-persist">
+                            <img src="img/pointN.png" id="idPointN">             
+                            Agenda              
+                        </a>
+                    </li>
                     <li><a href="#Tweets">Tweets</a></li>
                     <li><a href="#speakers">Speakers</a></li>
                 </ul>
             </div>
             
-            <div data-role="navbar" id="filterBar">
+            <div data-role="navbar" class="idFilterNavBar" id="filterBar">
                 <ul>
-                    <li><a href="" data-theme="c" class="ui-btn-active ui-state-persist">Todos</a></li>
-                    <li><a href="" data-theme="c">Academia</a></li>
-                    <li><a href="" data-theme="c">Talks</a></li>
-                    <li><a href="" data-theme="c">Networking</a></li>
+                    <li><a href="#" id="Todos" class="ui-btn-active ui-state-persist" onclick="desactivarTab();">
+                            <img src="img/pointN.png" id="idPointTodos">
+                        	Todos
+                        </a>
+                        </li>
+                    <li onclick="permutarimagen1();"><a href="#" id="Charla">                                                                               
+                            <img id="idTalk" src="img/talksOff.png">                                                                       
+                            <img src="img/point.png" id="idPointIconTalks" style="position:relative; left:-40%; top:-55px;">                       
+                        </a>
+                    </li>
+                    <li onclick="permutarimagen2();"><a href="#" id="Academia">                        
+                            <img id="idAcademia" src="img/academiaOff.png">   
+                            <img src="img/point.png" id="idPointIconAcademia" style="position:relative; left:-40%; top:-55px;">
+                        </a>
+                    </li>
+                    <li onclick="permutarimagen3();"><a href="#" id="Networking" >
+                        <!-- Networking -->
+                            <img id="idNetwork" src="img/networkOff.png">   
+                            <img src="img/point.png" id="idPointIconNetwork" style="position:relative; left:-40%; top:-55px;">
+                    </a></li>
                 </ul>
             </div>
-        </div>
-        
+        </div>        
         <div data-role="content" class="content">
 		</div>
       
@@ -551,9 +908,9 @@ Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce 
 	<!--Detalle charla-->
 	<div data-role="page" id="detalleCharla">
         <div data-role="header" data-id="headerBar" data-position="fixed" data-theme="a">
-            <div data-role="navbar">
+            <div data-role="navbar" id="idNavBar">
                 <ul>
-                    <li><a href="#XE2012">XE2012</a></li>
+                    <li><a href="#XE2012"><img src="img/LOGO1.png" id="imgExp2" width="60%"></a></li>
                     <li><a href="#Agenda" class="ui-btn-active ui-state-persist">Agenda</a></li>
                     <li><a href="#Tweets">Tweets</a></li>
                     <li><a href="#speakers">Speakers</a></li>
@@ -562,22 +919,21 @@ Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce 
 			<h1></h1>
         </div>
         
-        <div data-role="content" class="content">
-            
-            
+        <div data-role="content" class="content">            
         </div>
         
-        <div data-role="footer" data-position="fixed">
-            <a data-rel="back">Volver</a>
+        <div data-role="footer">
+            <!-- <a data-rel="back">Volver</a> -->
+            <h1>Endeavor NOA 2012</h1>
         </div>
     </div>
 
 	<!--Detalle Sepeaker-->
 	<div data-role="page" id="detalleSpeaker">
         <div data-role="header" data-id="headerBar" data-position="fixed">
-            <div data-role="navbar">
+            <div data-role="navbar" id="idNavBar">
                 <ul>
-                    <li><a href="#XE2012">XE2012</a></li>
+                    <li><a href="#XE2012"><img src="img/LOGO1.png" id="imgExp2" width="60%"></a></li>
                     <li><a href="#Agenda">Agenda</a></li>
                     <li><a href="#Tweets">Tweets</a></li>
                     <li><a href="#speakers" class="ui-btn-active ui-state-persist">Speakers</a></li>
@@ -590,25 +946,31 @@ Maecenas egestas congue lacus eu aliquet. Ut lobortis adipiscing euismod. Fusce 
             
         </div>
         
-        <div data-role="footer" data-position="fixed">
-            <a data-rel="back">Volver</a>
+        <div data-role="footer">
+            <!-- <a data-rel="back" id="idBack">Volver</a> -->
+            <h1>Endeavor NOA 2012</h1>
         </div>
     </div>
 
-	<!--Detalle Sepeaker-->
-	
+	<!--Speaker-->	
 	<div data-role="page" id="speakers">
-        <div data-role="header" data-id="headerBar" data-position="fixed" data-theme="a">
-            <div data-role="navbar">
+        <div data-role="header" data-id="headerBar" data-position="fixed">
+            <div data-role="navbar" id="idNavBar">
                 <ul>
-                    <li><a href="#XE2012">XE2012</a></li>
-                    <li><a href="#Agenda">Agenda</a></li>
-                    <li><a href="#Tweets">Tweets</a></li>
-                    <li><a href="#speakers" class="ui-btn-active ui-state-persist">Speakers</a></li>
+                    <li><a href="#XE2012"><img src="img/LOGO1.png" id="imgExp2" width="60%"></a></li>
+                    <li><a href="#Agenda">Agenda</a>
+                    </li>
+                    <li><a href="#Tweets">Tweets</a>
+                    </li>
+                    <li><a href="#speakers" class="ui-btn-active ui-state-persist">
+                            <img src="img/pointN.png" id="idPointN">   
+                            Speakers
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
-    <div data-role="content" class="content">
+    <div data-role="content" class="content"></div>
         
     </div>
 	
