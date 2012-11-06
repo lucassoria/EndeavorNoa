@@ -47,6 +47,7 @@
     	}
     	
     	function traerSponsors(){
+    		$('#loadingMessageSponsors').show();
 			$.ajax({
 				url: 'http://buhoonline.com/ex2012/servlet/awssponsors',
 				type: "POST",
@@ -78,6 +79,7 @@
 		
 		//Llena la lista de sponsors a traves de un json como parametro
 		function llenarSponsors(data){
+			$('#loadingMessageSponsors').hide();
         	var $page = $("#Sponsors");
         	$page.find(".content").empty();
         	$page.find(".content").html("<ul></ul>");
@@ -126,6 +128,7 @@
         }
 		
 		function traerAgenda(){
+    		$('#loadingMessageAgenda').show();
 			$.ajax({
 				url: 'http://buhoonline.com/ex2012/servlet/awsagenda',
 				type: "POST",
@@ -157,25 +160,20 @@
 		
 		//Llena la lista de charlas a traves de un json como parametro
 		function llenarAgenda(data){
+			$('#loadingMessageAgenda').hide();
         	var $page = $("#Agenda");
         	$page.find(".content").empty();
         	$page.find(".content").html("<ul></ul>");
         	$lista = $page.find(".content ul");
         	$lista.attr("data-filter","true");
 			$lista.attr("data-role","listview");
-			//$lista.attr("id","testlist" );
         	var items = [];
 			$.each(data, function(key, val) {
-				var date = new Date(Date.parse(val.Fecha))
-				var strHtml = '<li data-role="list-divider"> ' + date.toLocaleString().replace(" ART", '') + ' </li>';
-				//var item = $(strHtml);
-				//$lista.append(item);
-				//$.each(val, function(key, val) {
+				var strHtml = '<li data-role="list-divider"> ' + val.Fecha + ' </li>';
 				strHtml += '<li data-filtertext='+val.Grupo+'><a href="#detalleCharla"><p><strong>'+val.Grupo+'</strong></p><h1><strong>'+val.Titulo+'</strong></h1><p>'+val.Descripcion+'</p></a></li>'; 
 				var item = $(strHtml);
 				$lista.append(item);
 				$lista.find("a:last").jqmData("agenda",JSON.stringify(val));
-				//});
 			});
 			$lista.listview();
 			$lista.find('a').click(function(){
@@ -185,6 +183,7 @@
         }
 
 		function traerSpeakers(){
+    		$('#loadingMessageSpeakers').show();
 			$.ajax({
 				url: 'http://buhoonline.com/ex2012/servlet/awsspeakers',
 				type: "POST",
@@ -216,6 +215,7 @@
     	
     	//Llena la lista de speakers a traves de un json como parametro
         function llenarSpeakers(data){
+			$('#loadingMessageSpeakers').hide();
         	var $page = $("#speakers");
         	$page.find(".content").empty();
         	$page.find(".content").html("<ul></ul>");
@@ -832,6 +832,9 @@
             </div>
         </div>
         <div data-role="content" class="content">
+			<div id='loadingMessageSponsors' style='display:none'>
+				<img src='img/ajax-loader.gif'/>
+			</div>
         </div>
     </div>
     
@@ -882,25 +885,28 @@
                         	Todos
                         </a>
                         </li>
-                    <li onclick="permutarimagen1();"><a href="#" id="Charla">                                                                               
+                    <li onclick="permutarimagen1();"><a href="#" id="Endeavor">                                                                               
                             <img id="idTalk" src="img/talksOff.png">                                                                       
                             <img src="img/point.png" id="idPointIconTalks" style="position:relative; left:-40%; top:-55px;">                       
                         </a>
                     </li>
-                    <li onclick="permutarimagen2();"><a href="#" id="Academia">                        
+                    <li onclick="permutarimagen2();"><a href="#" id="Talleres">                        
                             <img id="idAcademia" src="img/academiaOff.png">   
                             <img src="img/point.png" id="idPointIconAcademia" style="position:relative; left:-40%; top:-55px;">
                         </a>
                     </li>
-                    <li onclick="permutarimagen3();"><a href="#" id="Networking" >
+                    <li onclick="permutarimagen3();"><a href="#" id="Consultorios" >
                         <!-- Networking -->
                             <img id="idNetwork" src="img/networkOff.png">   
                             <img src="img/point.png" id="idPointIconNetwork" style="position:relative; left:-40%; top:-55px;">
                     </a></li>
                 </ul>
             </div>
-        </div>        
+        </div>
         <div data-role="content" class="content">
+			<div id='loadingMessageAgenda' style='display:none'>
+				<img src='img/ajax-loader.gif'/>
+			</div>
 		</div>
       
     </div>
@@ -970,7 +976,11 @@
                 </ul>
             </div>
         </div>
-    <div data-role="content" class="content"></div>
+	    <div data-role="content" class="content">
+			<div id='loadingMessageSpeakers' style='display:none'>
+				<img src='img/ajax-loader.gif'/>
+			</div>
+    	</div>
         
     </div>
 	
