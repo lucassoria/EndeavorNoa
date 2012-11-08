@@ -97,48 +97,7 @@
         	});
         	
         	item = $(strHtml);
-			$lista.append(item);
-        	
-			/*var premiumCounter = 0;
-			var baseCounter = 0;
-			var juniorCounter = 0;
-			var strAliadosEstrategicosHtml = '<li data-role="list-divider"> Aliados Estrategicos </li>';
-			var strBaseHtml = '<li data-role="list-divider"> Base </li>';
-			var strJuniorHtml = '<li data-role="list-divider"> Junior </li>';
-			var strHtml = "";
-			
-			$.each(data, function(key, val) {
-				strHtml = '<li data-icon="false"><a href="http://' + val.Link + '" target="_blank">' + ((val.Imagen != "" && val.Imagen)? '<img src="data:image/jpg;base64,'+val.Imagen+'"/>' : "") + '<h3> ' + val.Nombre + ' </h3> ' + val.Descripcion + ' </a></li>';
-				*///switch(val.Tipo.replace(/^\s\s*/, '').replace(/\s\s*$/, '')){
-				/*	case "Premium":
-						premiumCounter++;
-						strPremiunHtml += strHtml;
-						break;
-					case "Base":
-						baseCounter++;
-						strBaseHtml += strHtml;
-						break;
-					case "Junior":
-						juniorCounter++;
-						strJuniorHtml += strHtml;
-						break;
-				}
-			});
-				
-			var item;
-			if(premiumCounter > 0){
-				item = $(strPremiunHtml);
-				$lista.append(item);
-			}
-			if(baseCounter > 0){
-				item = $(strBaseHtml);
-				$lista.append(item);
-			}
-			if(juniorCounter > 0){
-				item = $(strJuniorHtml);
-				$lista.append(item);
-			}*/
-			
+			$lista.append(item);			
 			$lista.listview();
         }
 		
