@@ -84,18 +84,33 @@
         	$page.find(".content").empty();
         	$page.find(".content").html("<ul></ul>");
         	$lista = $page.find(".content ul");
-			var premiumCounter = 0;
+        	
+        	var strHtml = "";
+        	var tipoSponsor = "";
+        	$.each(data, function(key, val) {
+        		if(val.Tipo.replace(/^\s\s*/, '').replace(/\s\s*$/, '') == tipoSponsor)
+        			strHtml += '<li data-icon="false"><a href="http://' + val.Link + '" target="_blank">' + ((val.Imagen != "" && val.Imagen)? '<img src="data:image/jpg;base64,'+val.Imagen+'"/>' : "") + '<h3> ' + val.Nombre + ' </h3> ' + val.Descripcion + ' </a></li>';
+        		else{
+        			tipoSponsor = val.Tipo.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+        			strHtml += '<li data-role="list-divider"> ' + val.Tipo + ' </li><li data-icon="false"><a href="http://' + val.Link + '" target="_blank">' + ((val.Imagen != "" && val.Imagen)? '<img src="data:image/jpg;base64,'+val.Imagen+'"/>' : "") + '<h3> ' + val.Nombre + ' </h3> ' + val.Descripcion + ' </a></li>';
+				}
+        	});
+        	
+        	item = $(strHtml);
+			$lista.append(item);
+        	
+			/*var premiumCounter = 0;
 			var baseCounter = 0;
 			var juniorCounter = 0;
-			var strPremiunHtml = '<li data-role="list-divider"> Premium </li>';
+			var strAliadosEstrategicosHtml = '<li data-role="list-divider"> Aliados Estrategicos </li>';
 			var strBaseHtml = '<li data-role="list-divider"> Base </li>';
 			var strJuniorHtml = '<li data-role="list-divider"> Junior </li>';
 			var strHtml = "";
 			
 			$.each(data, function(key, val) {
 				strHtml = '<li data-icon="false"><a href="http://' + val.Link + '" target="_blank">' + ((val.Imagen != "" && val.Imagen)? '<img src="data:image/jpg;base64,'+val.Imagen+'"/>' : "") + '<h3> ' + val.Nombre + ' </h3> ' + val.Descripcion + ' </a></li>';
-				switch(val.Tipo.replace(/^\s\s*/, '').replace(/\s\s*$/, '')){
-					case "Premium":
+				*///switch(val.Tipo.replace(/^\s\s*/, '').replace(/\s\s*$/, '')){
+				/*	case "Premium":
 						premiumCounter++;
 						strPremiunHtml += strHtml;
 						break;
@@ -122,7 +137,7 @@
 			if(juniorCounter > 0){
 				item = $(strJuniorHtml);
 				$lista.append(item);
-			}
+			}*/
 			
 			$lista.listview();
         }
